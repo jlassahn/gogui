@@ -80,6 +80,22 @@ func CreateTextButton(txt string) Button {
 	return buttonPtr{button}
 }
 
+func CreateImageButton(img Image) Button {
+	button := C.CreateImageButton(img.getPtr().ptr)
+	C.SetButtonCallbacks(button)
+	return buttonPtr{button}
+}
+
+func CreateImageTextButton(img Image, txt string) Button {
+
+	ctxt := C.CString(txt)
+	defer C.free(unsafe.Pointer(ctxt))
+
+	button := C.CreateImgTextButton(img.getPtr().ptr, ctxt)
+	C.SetButtonCallbacks(button)
+	return buttonPtr{button}
+}
+
 func (b buttonPtr) getElementPtr() elementPtr {
 	return elementPtr{C.ButtonToElement(b.ptr)}
 }
@@ -220,6 +236,34 @@ func (gfx graphicsPtr) FillPath() {
 	C.FillPath(gfx.ptr)
 }
 
+func CreateImage(width int, height int) Image {
+	return imagePtr{C.CreateImage(C.int(width), C.int(height))}
+}
+
+func (img imagePtr) getPtr() imagePtr {
+	return img
+}
+
+func (img imagePtr) Destroy() {
+	C.DestroyImage(img.getPtr().ptr)
+}
+
+func (img imagePtr) GetImageBuffer() []byte {
+	carray := C.GetImageBuffer(img.getPtr().ptr)
+	length := int(C.GetImageBufferSize(img.getPtr().ptr))
+	slice := (*[0x7FFFFFFF]byte)(unsafe.Pointer(carray))[:length:length]
+
+	return slice
+}
+
+func (img imagePtr) BeginDraw() Graphics {
+	return graphicsPtr{C.BeginDrawToImage(img.getPtr().ptr)}
+}
+
+func (img imagePtr) EndDraw(gfx Graphics) {
+	C.EndDrawToImage(img.getPtr().ptr, gfx.(graphicsPtr).ptr)
+}
+
 
 
 func cpos(x Position) C.POSITION {
@@ -353,12 +397,9 @@ func (gfx graphicsPtr) DrawImage(x float64, y float64,
 func CreateMenu() Menu { return nil }
 func CreateTextMenuItem(txt string) MenuItem { return nil }
 func CreateImageTextMenuItem(img Image, txt string) MenuItem { return nil }
-func CreateImageButton(img Image) Button { return nil }
-func CreateImageTextButton(img Image, txt string) Button { return nil }
 
 func CreateFont(family string, style int, dise float64) Font { return nil }
 func DestroyFont(font Font) { }
 
-func CreateImage(width int, height int) Image { return nil }
 func CreateImageFromFile(filename string) Image { return nil }
 

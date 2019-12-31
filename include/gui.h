@@ -137,6 +137,7 @@ Image CreateImage(int width, int height);
 Image CreateImageFromFile(const char *filename);
 void DestroyImage(Image img);
 uint8_t *GetImageBuffer(Image img);
+int GetImageBufferSize(Image img);
 Graphics BeginDrawToImage(Image img);
 void EndDrawToImage(Image img, Graphics gfx);
 

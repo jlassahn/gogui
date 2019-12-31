@@ -77,16 +77,6 @@
 		[txtcol setFill];
 		[str drawAtPoint: pt withAttributes: dict];
 		*/
-
-		/* FIXME notes on images
-			Draw into a bitmap by
-				Create an NSImage
-				Create a NSBitmapImageRep and add it to the NSImage
-				Use NSGraphicsContext::graphicsContextWithBitmapImageRep
-			Other methods load image files into an NSImage, but they
-			don't guarantee that the representation is compatible with
-			the drawing procedure above.
-		 */
 	}
 @end
 

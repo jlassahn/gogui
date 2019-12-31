@@ -75,6 +75,7 @@ type MenuItem interface {
 }
 
 type Image interface {
+	getPtr() imagePtr
 	Destroy();
 	GetImageBuffer() []byte
 	BeginDraw() Graphics

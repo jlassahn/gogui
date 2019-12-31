@@ -54,6 +54,37 @@ func main() {
 
 	window.AddChild(scroll)
 
+	img := gogui.CreateImage(32, 32)
+	defer img.Destroy()
+
+	gfx := img.BeginDraw()
+	gfx.StartPath(0.0, 0.0)
+	gfx.LineTo(32.0, 16.0)
+	gfx.StrokePath()
+	img.EndDraw(gfx)
+
+	/*
+	imgData := img.GetImageBuffer()
+	for i:=0; i<32*32*4; i += 4 {
+		imgData[i] = byte((i>>4)&0xFF);
+		imgData[i+1] = 0x00;
+		imgData[i+2] = 0x00;
+		imgData[i+3] = 0xFF;
+	}
+	*/
+
+	button := gogui.CreateImageButton(img)
+	btnWidth := button.GetBestWidth()
+	btnHeight := button.GetBestHeight()
+	fmt.Printf("button size: %v, %v\n", btnWidth, btnHeight)
+
+	button.SetPosition(
+		gogui.Pos(0,0),
+		gogui.Pos(0,0),
+		gogui.Pos(0,btnWidth),
+		gogui.Pos(0,btnHeight))
+	window.AddChild(button)
+
 	/*
 	box1 := gogui.CreateBox()
 	box1.SetPosition(

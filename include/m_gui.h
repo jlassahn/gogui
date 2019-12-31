@@ -2,6 +2,21 @@
 #import "Cocoa/Cocoa.h"
 #import "include/gui.h"
 
+@interface iImage : NSObject
+{
+	int width;
+	int height;
+	NSImage *img;
+	NSBitmapImageRep *rep;
+}
+- (id) initWithWidth: (int)w height: (int)h;
+
+- (NSImage *) getNSImage;
+
+- (Graphics) beginDraw;
+- (void) endDraw: (Graphics) gfx;
+@end
+
 @interface iElement : NSObject
 {
 	NSView *view;
@@ -64,11 +79,13 @@
 @interface iButton : iElement
 {
 	NSButton *button;
+	iImage *image;
 
 	void (*handle_click)(void *ctx);
 	void *handle_click_ctx;
 }
 - (id) initWithText: (NSString *) txt;
+- (id) initWithImage: (iImage *) txt;
 - (void) handleClick: (void (*)(void *)) fn withContext: (void *) ctx;
 - (int) bestWidth;
 - (int) bestHeight;
@@ -79,10 +96,6 @@
 @end
 
 @interface iMenuItem : iMenu
-{ }
-@end
-
-@interface iImage : NSObject
 { }
 @end
 
