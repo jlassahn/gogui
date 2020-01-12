@@ -49,6 +49,32 @@
 		return self;
 	}
 
+- (id) initWithImage: (iImage *)img text: (NSString *)txt
+	{
+		self = [super init];
+		if (!self)
+			return self;
+
+		self->image = img;
+
+		NSImage *nsimage = [image getNSImage];
+
+		//FIXME do we need both a button and a view member?
+		self->button = [NSButton
+			buttonWithTitle: txt
+			image: nsimage
+			target: self
+			action: @selector(onClick:)];
+		//[self->button setBezelStyle: NSBezelStyleShadowlessSquare];
+		//[self->button setBordered: YES];
+
+		self->view = button;
+
+		//FIXME set hidden property?
+
+		return self;
+	}
+
 - (void) handleClick: (void (*)(void *)) fn withContext: (void *) ctx
 	{
 		self->handle_click = fn;
@@ -89,8 +115,8 @@ Button CreateImageButton(Image img)
 
 Button CreateImgTextButton(Image img, const char *txt)
 {
-	//FIXME
-	return NULL;
+	NSString *str = [NSString stringWithCString:txt encoding:NSUTF8StringEncoding];
+	return (Button)[[iButton alloc] initWithImage: (iImage *)img text: str];
 }
 
 

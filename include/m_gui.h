@@ -85,7 +85,8 @@
 	void *handle_click_ctx;
 }
 - (id) initWithText: (NSString *) txt;
-- (id) initWithImage: (iImage *) txt;
+- (id) initWithImage: (iImage *) img;
+- (id) initWithImage: (iImage *)img text: (NSString *)txt;
 - (void) handleClick: (void (*)(void *)) fn withContext: (void *) ctx;
 - (int) bestWidth;
 - (int) bestHeight;
