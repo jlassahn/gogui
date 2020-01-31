@@ -1,0 +1,100 @@
+
+#import "include/m_gui.h"
+
+@implementation iMenu
+
+- (void) makeMain
+	{
+		[NSApp setMainMenu: self->menu];
+	}
+
+- (id) init
+	{
+		self = [super init];
+		if (!self)
+			return self;
+
+		self->menu = [[NSMenu alloc] init];
+		return self;
+	}
+
+- (id) initForSubmenu
+	{
+		self = [super init];
+		if (!self)
+			return self;
+		self->menu = NULL;
+		return self;
+	}
+
+- (void) addMenuItem: (iMenuItem *)it
+	{
+		printf("adding menu item: %p to %p\n", [it getNSItem], self->menu);
+		[ self->menu addItem: [it getNSItem]];
+		printf("number of items: %d\n", (int)[self->menu numberOfItems]);
+	}
+@end
+
+@implementation iMenuItem
+- (id) initWithText: (NSString *) txt
+	{
+		self = [super initForSubmenu];
+		if (!self)
+			return self;
+
+		self->item = [[NSMenuItem alloc] initWithTitle: txt action: NULL keyEquivalent: @""];
+		self->text = txt;
+		[txt retain];
+
+		return self;
+	}
+
+- (NSMenuItem *) getNSItem
+	{
+		return self->item;
+	}
+
+- (void) addMenuItem: (iMenuItem *)it
+	{
+		if (self->menu == NULL)
+		{
+			printf("adding first submenu to %p\n", self);
+			self->menu = [[NSMenu alloc] initWithTitle: self->text];
+			[self->item setSubmenu: self->menu];
+		}
+		printf("adding item to %p\n", self);
+		[ self->menu addItem: [it getNSItem]];
+	}
+@end
+
+Menu CreateMenu(void)
+{
+	return (Menu)[[iMenu alloc] init];
+}
+
+MenuItem CreateTextMenuItem(const char *txt)
+{
+	NSString *str = [NSString stringWithCString:txt encoding:NSUTF8StringEncoding];
+	return (MenuItem)[[iMenuItem alloc] initWithText: str];
+}
+
+MenuItem CreateImgTextMenuItem(Image img, const char *txt)
+{
+	return NULL;
+}
+
+void SetMainMenu(Menu m)
+{
+	[ (iMenu *)m makeMain];
+}
+
+Menu MenuItemToMenu(MenuItem mi)
+{
+	return (Menu)mi;
+}
+
+void AddMenuItem(Menu  menu, MenuItem item)
+{
+	[ (iMenu *)menu addMenuItem: (iMenuItem *)item];
+}
+

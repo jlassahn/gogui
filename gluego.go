@@ -265,6 +265,47 @@ func (img imagePtr) EndDraw(gfx Graphics) {
 }
 
 
+func CreateMenu() Menu {
+	menu := C.CreateMenu()
+	return menuPtr{menu}
+}
+
+func (menu menuPtr) getPtr() menuPtr {
+	return menu
+}
+
+func (menu menuPtr) AddMenuItem(item MenuItem) {
+	C.AddMenuItem(menu.ptr, item.(menuItemPtr).ptr);
+}
+
+func (mi menuItemPtr) AddMenuItem(item MenuItem) {
+	C.AddMenuItem(mi.getPtr().ptr, item.(menuItemPtr).ptr);
+}
+
+func CreateTextMenuItem(txt string) MenuItem {
+
+	ctxt := C.CString(txt)
+	defer C.free(unsafe.Pointer(ctxt))
+
+	item := C.CreateTextMenuItem(ctxt)
+	return menuItemPtr{item}
+}
+
+func CreateImageTextMenuItem(img Image, txt string) MenuItem {
+	ctxt := C.CString(txt)
+	defer C.free(unsafe.Pointer(ctxt))
+
+	item := C.CreateImgTextMenuItem(img.getPtr().ptr, ctxt)
+	return menuItemPtr{item}
+}
+
+func (menu menuItemPtr) getPtr() menuPtr {
+	return menuPtr{C.MenuItemToMenu(menu.ptr)}
+}
+
+func SetMainMenu(menu Menu) {
+	C.SetMainMenu(menu.getPtr().ptr)
+}
 
 func cpos(x Position) C.POSITION {
 	return C.POSITION {
@@ -394,9 +435,12 @@ func (gfx graphicsPtr) DrawImage(x float64, y float64,
 		img Image) {}
 
 
-func CreateMenu() Menu { return nil }
-func CreateTextMenuItem(txt string) MenuItem { return nil }
-func CreateImageTextMenuItem(img Image, txt string) MenuItem { return nil }
+func (menu menuPtr) GetMenuItemCount() int { return 0 }
+func (menu menuPtr) GetMenuItem(n int) MenuItem { return nil }
+
+func (mi menuItemPtr) GetMenuItemCount() int { return 0 }
+func (mi menuItemPtr) GetMenuItem(n int) MenuItem { return nil }
+func (mi menuItemPtr) HandleMenuSelect(fn func()) {}
 
 func CreateFont(family string, style int, dise float64) Font { return nil }
 func DestroyFont(font Font) { }

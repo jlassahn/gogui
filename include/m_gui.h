@@ -92,12 +92,23 @@
 - (int) bestHeight;
 @end
 
+@class iMenuItem;
 @interface iMenu : NSObject
-{ }
+{
+	NSMenu *menu;
+}
+
+- (void) addMenuItem: (iMenuItem *)item;
+- (void) makeMain;
 @end
 
 @interface iMenuItem : iMenu
-{ }
+{
+	NSMenuItem *item;
+	NSString *text;
+}
+- (id) initWithText: (NSString *) txt;
+- (NSMenuItem *) getNSItem;
 @end
 
 

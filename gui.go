@@ -64,9 +64,10 @@ type Button interface {
 }
 
 type Menu interface {
+	getPtr() menuPtr
 	AddMenuItem(item MenuItem)
 	GetMenuItemCount() int
-	GerMenuItem(n int) MenuItem
+	GetMenuItem(n int) MenuItem
 }
 
 type MenuItem interface {

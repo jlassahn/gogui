@@ -74,6 +74,11 @@
 		return size;
 	}
 
+- (void) windowDidBecomeKey: (NSNotification *)notification
+	{
+		printf("FIXME became key\n");
+	}
+
 - (void) show
 	{
 		[self->window orderFrontRegardless];
