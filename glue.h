@@ -8,4 +8,5 @@ extern void SetWindowCallbacks(Window window);
 extern void SetButtonCallbacks(Button button);
 extern void SetBoxCallbacks(Box box);
 extern void SetScrollBoxCallbacks(ScrollBox box);
+extern void SetMenuCallbacks(MenuItem item);
 

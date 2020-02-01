@@ -42,7 +42,11 @@
 		if (!self)
 			return self;
 
-		self->item = [[NSMenuItem alloc] initWithTitle: txt action: NULL keyEquivalent: @""];
+		//action: @selector(onSelect:);
+		self->item = [[NSMenuItem alloc] initWithTitle: txt
+			action: @selector(onSelect:)
+			keyEquivalent: @""];
+		[self->item setTarget: self];
 		self->text = txt;
 		[txt retain];
 
@@ -64,6 +68,19 @@
 		}
 		printf("adding item to %p\n", self);
 		[ self->menu addItem: [it getNSItem]];
+	}
+
+
+- (void) handleSelect: (void (*)(void *)) fn withContext: (void *) ctx
+	{
+		self->handle_select = fn;
+		self->handle_select_ctx = ctx;
+	}
+
+- (void) onSelect: (id)sender
+	{
+		if (self->handle_select)
+			self->handle_select(self->handle_select_ctx);
 	}
 @end
 
@@ -96,5 +113,10 @@ Menu MenuItemToMenu(MenuItem mi)
 void AddMenuItem(Menu  menu, MenuItem item)
 {
 	[ (iMenu *)menu addMenuItem: (iMenuItem *)item];
+}
+
+void HandleMenuSelect(MenuItem item, void (*fn)(void *), void *ctx)
+{
+	[(iMenuItem *)item handleSelect: fn withContext: ctx];
 }
 

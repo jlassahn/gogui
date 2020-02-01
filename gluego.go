@@ -288,6 +288,7 @@ func CreateTextMenuItem(txt string) MenuItem {
 	defer C.free(unsafe.Pointer(ctxt))
 
 	item := C.CreateTextMenuItem(ctxt)
+	C.SetMenuCallbacks(item)
 	return menuItemPtr{item}
 }
 
@@ -301,6 +302,10 @@ func CreateImageTextMenuItem(img Image, txt string) MenuItem {
 
 func (menu menuItemPtr) getPtr() menuPtr {
 	return menuPtr{C.MenuItemToMenu(menu.ptr)}
+}
+
+func (mi menuItemPtr) HandleMenuSelect(fn func()) {
+	itemSelectMap[mi.ptr] = fn
 }
 
 func SetMainMenu(menu Menu) {
@@ -338,6 +343,7 @@ type fontPtr struct { ptr C.Font }
 var windowCloseMap = map[C.Window] func() {}
 var buttonClickMap = map[C.Button] func() {}
 var boxRedrawMap = map[C.Box] func(Graphics) {}
+var itemSelectMap = map[C.MenuItem] func() {}
 
 //export windowCloseCallback
 func windowCloseCallback(w C.Window) {
@@ -363,6 +369,14 @@ func boxRedrawCallback(b C.Box, cgfx C.Graphics) {
 	if fn != nil {
 		fmt.Printf("calling callback\n")
 		fn(gfx)
+	}
+}
+
+//export itemSelectCallback
+func itemSelectCallback(m C.MenuItem) {
+	fn := itemSelectMap[m]
+	if fn != nil {
+		fn()
 	}
 }
 
@@ -440,7 +454,6 @@ func (menu menuPtr) GetMenuItem(n int) MenuItem { return nil }
 
 func (mi menuItemPtr) GetMenuItemCount() int { return 0 }
 func (mi menuItemPtr) GetMenuItem(n int) MenuItem { return nil }
-func (mi menuItemPtr) HandleMenuSelect(fn func()) {}
 
 func CreateFont(family string, style int, dise float64) Font { return nil }
 func DestroyFont(font Font) { }

@@ -96,6 +96,9 @@
 @interface iMenu : NSObject
 {
 	NSMenu *menu;
+
+	void (*handle_select)(void *ctx);
+	void *handle_select_ctx;
 }
 
 - (void) addMenuItem: (iMenuItem *)item;
@@ -109,6 +112,7 @@
 }
 - (id) initWithText: (NSString *) txt;
 - (NSMenuItem *) getNSItem;
+- (void) handleSelect: (void (*)(void *)) fn withContext: (void *) ctx;
 @end
 
 

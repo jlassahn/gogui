@@ -8,6 +8,7 @@
 extern void windowCloseCallback(Window w);
 extern void buttonClickCallback(Button b);
 extern void boxRedrawCallback(Box b, Graphics gfx);
+extern void itemSelectCallback(MenuItem m);
 
 
 // static C redirect functions that can be called through pointers
@@ -33,6 +34,10 @@ static void boxKeyUp(void *ctx, int kc) {}
 static void boxRedraw(void *ctx, Graphics gfx) {
 	printf("static boxRedraw\n");
 	boxRedrawCallback((Box)ctx, gfx);
+}
+
+static void itemSelect(void *ctx) {
+	itemSelectCallback((MenuItem)ctx);
 }
 
 // setup functions called from Go
@@ -72,5 +77,10 @@ void SetScrollBoxCallbacks(ScrollBox b)
 	HandleKeyDown(box, boxKeyDown, box);
 	HandleKeyUp(box, boxKeyUp, box);
 	HandleRedraw(box, boxRedraw, box);
+}
+
+void SetMenuCallbacks(MenuItem m)
+{
+	HandleMenuSelect(m, itemSelect, m);
 }
 
