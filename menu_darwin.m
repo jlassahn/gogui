@@ -15,6 +15,7 @@
 			return self;
 
 		self->menu = [[NSMenu alloc] init];
+		[self->menu setAutoenablesItems: NO];
 		return self;
 	}
 
@@ -49,6 +50,7 @@
 		[self->item setTarget: self];
 		self->text = txt;
 		[txt retain];
+		[self->item setEnabled: YES]; //FIXME have an enable menu somewhere
 
 		return self;
 	}
@@ -64,6 +66,7 @@
 		{
 			printf("adding first submenu to %p\n", self);
 			self->menu = [[NSMenu alloc] initWithTitle: self->text];
+			[self->menu setAutoenablesItems: NO];
 			[self->item setSubmenu: self->menu];
 		}
 		printf("adding item to %p\n", self);

@@ -125,9 +125,10 @@ void ClosePath(Graphics gfx);
 void StrokePath(Graphics gfx);
 void FillCanvas(Graphics gfx);
 void FillPath(Graphics gfx);
-void SetFont(Graphics gfx, Font font);
+void SetFont(Graphics gfx, Font font, double size);
 void SetDefaultFont(Graphics gfx); //selects a font used for normal UI text
 void DrawText(Graphics gfx, double x, double y, double angle, const char *txt);
+double MeasureText(Graphics gfx, const char *txt);
 void DrawImage(Graphics gfx,
 		double x, double y,
 		double width, double height,
@@ -143,7 +144,7 @@ Graphics BeginDrawToImage(Image img);
 void EndDrawToImage(Image img, Graphics gfx);
 
 
-Font CreateFont(const char *family, int style, double size);
+Font CreateFont(const char *family, int style);
 void DestroyFont(Font font);
 
 void Init(void);

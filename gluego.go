@@ -236,6 +236,27 @@ func (gfx graphicsPtr) FillPath() {
 	C.FillPath(gfx.ptr)
 }
 
+func (gfx graphicsPtr) DrawText(x float64, y float64, angle float64, txt string) {
+	ctxt := C.CString(txt)
+	defer C.free(unsafe.Pointer(ctxt))
+	C.DrawText(gfx.ptr, C.double(x), C.double(y), C.double(angle), ctxt)
+}
+
+func (gfx graphicsPtr)  MeasureText(txt string) float64 {
+
+	ctxt := C.CString(txt)
+	defer C.free(unsafe.Pointer(ctxt))
+	return float64(C.MeasureText(gfx.ptr, ctxt))
+}
+
+func (gfx graphicsPtr) SetFont(font Font, size float64) {
+	C.SetFont(gfx.ptr, font.ptr, C.double(size))
+}
+
+func (gfx graphicsPtr) SetDefaultFont() {
+	C.SetDefaultFont(gfx.ptr)
+}
+
 func CreateImage(width int, height int) Image {
 	return imagePtr{C.CreateImage(C.int(width), C.int(height))}
 }
@@ -310,6 +331,18 @@ func (mi menuItemPtr) HandleMenuSelect(fn func()) {
 
 func SetMainMenu(menu Menu) {
 	C.SetMainMenu(menu.getPtr().ptr)
+}
+
+func CreateFont(family string, style int) Font {
+
+	ctxt := C.CString(family)
+	defer C.free(unsafe.Pointer(ctxt))
+
+	return Font(fontPtr{C.CreateFont(ctxt, C.int(style))})
+}
+
+func DestroyFont(font Font) {
+	C.DestroyFont(font.ptr)
 }
 
 func cpos(x Position) C.POSITION {
@@ -441,9 +474,6 @@ func (b buttonPtr) Parent() Element { return nil }
 func (b buttonPtr) SetText(txt string) {}
 func (b buttonPtr) SetImage(img Image) {}
 
-func (gfx graphicsPtr) SetFont(font Font) {}
-func (gfx graphicsPtr) SetDefaultFont() {}
-func (gfx graphicsPtr) DrawText(x float64, y float64, angle float64, txt string) {}
 func (gfx graphicsPtr) DrawImage(x float64, y float64,
 		width float64, height float64,
 		img Image) {}
@@ -455,8 +485,6 @@ func (menu menuPtr) GetMenuItem(n int) MenuItem { return nil }
 func (mi menuItemPtr) GetMenuItemCount() int { return 0 }
 func (mi menuItemPtr) GetMenuItem(n int) MenuItem { return nil }
 
-func CreateFont(family string, style int, dise float64) Font { return nil }
-func DestroyFont(font Font) { }
 
 func CreateImageFromFile(filename string) Image { return nil }
 

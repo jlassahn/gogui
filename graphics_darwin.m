@@ -7,6 +7,12 @@ struct iGraphics
 	int width;
 	int height;
 	NSBezierPath *path;
+	NSDictionary *fontAttributes;
+};
+
+struct iFont
+{
+	NSFont *nsfont;
 };
 
 static struct iGraphics shared_context;
@@ -16,6 +22,7 @@ Graphics gfxStartRender(int width, int height)
 	shared_context.width = width;
 	shared_context.height = height;
 	shared_context.path = [NSBezierPath bezierPath];
+	shared_context.fontAttributes = [[NSMutableDictionary alloc] init];
 
 	COLOR white = {255, 255, 255, 255};
 	COLOR black = {0, 0, 0, 255};
@@ -31,6 +38,8 @@ Graphics gfxStartRender(int width, int height)
 
 void gfxEndRender(Graphics gfx)
 {
+	[shared_context.fontAttributes release];
+	shared_context.fontAttributes = NULL;
 }
 
 int GetCanvasWidth(Graphics gfx)
@@ -60,6 +69,7 @@ void SetStrokeColor(Graphics gfx, COLOR color) {
 			alpha: color.a/255.0];
 
 		[col setStroke];
+		[gfx->fontAttributes setValue: col forKey: NSForegroundColorAttributeName];
 }
 
 void SetFillColor(Graphics gfx, COLOR color) {
@@ -141,12 +151,63 @@ void FillPath(Graphics gfx) {
 	[gfx->path fill];
 }
 
-void SetFont(Graphics gfx, Font font) {}
-// maybe use [NSFont systemFontOfSize:0]
-void SetDefaultFont(Graphics gfx) {}
-void DrawText(Graphics gfx, double x, double y, double angle, const char *txt) {}
+void SetFont(Graphics gfx, Font font, double size) {
+	NSFont *fnt = [NSFont fontWithName: [font->nsfont fontName] size: size];
+	[gfx->fontAttributes setValue: fnt forKey: NSFontAttributeName];
+}
+
+void SetDefaultFont(Graphics gfx) {
+	NSFont *font = [NSFont systemFontOfSize: 0];
+	[gfx->fontAttributes setValue: font forKey: NSFontAttributeName];
+}
+
+double MeasureText(Graphics gfx, const char *txt)
+{
+	NSString *str = [NSString stringWithCString:txt encoding:NSUTF8StringEncoding];
+	return [str sizeWithAttributes: gfx->fontAttributes].width;
+}
+
+void DrawText(Graphics gfx, double x, double y, double angle, const char *txt) {
+
+	NSString *str = [NSString stringWithCString:txt encoding:NSUTF8StringEncoding];
+
+	NSAffineTransform *xform = [NSAffineTransform transform];
+	[xform translateXBy: x yBy: gfx->height-y];
+	[xform rotateByDegrees: -angle];
+
+	[xform concat];
+
+	double baseline = [ gfx->fontAttributes[NSFontAttributeName] descender];
+
+	NSPoint pt;
+	pt.x = 0;
+	pt.y = baseline;
+	[str drawAtPoint: pt withAttributes: gfx->fontAttributes];
+
+	[xform invert];
+	[xform concat];
+}
+
 void DrawImage(Graphics gfx,
 		double x, double y,
 		double width, double height,
 		Image img) {}
+
+
+Font CreateFont(const char *family, int style)
+{
+	NSString *str = [NSString stringWithCString:family encoding:NSUTF8StringEncoding];
+	NSFont *fnt = [NSFont fontWithName: str size: 12];
+	if (!fnt)
+		return NULL;
+
+	struct iFont *ret = malloc(sizeof(struct iFont));
+	ret->nsfont = fnt;
+	return ret;
+}
+
+void DestroyFont(Font font)
+{
+	free(font);
+}
 

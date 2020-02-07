@@ -83,7 +83,7 @@ type Image interface {
 	EndDraw(gfx Graphics)
 }
 
-type Font *fontPtr
+type Font fontPtr
 
 type Graphics interface {
 	GetCanvasWidth() int
@@ -101,9 +101,10 @@ type Graphics interface {
 	StrokePath()
 	FillPath()
 	FillCanvas()
-	SetFont(font Font)
+	SetFont(font Font, size float64)
 	SetDefaultFont() //selects a font used for normal UI text
 	DrawText(x float64, y float64, angle float64, txt string)
+	MeasureText(txt string) float64
 	DrawImage(x float64, y float64,
 			width float64, height float64,
 			img Image)
