@@ -90,7 +90,7 @@ Menu CreateMenu(void);
 void AddMenuItem(Menu  menu, MenuItem item);
 int GetMenuItemCount(Menu menu);
 MenuItem GetMenuItem(Menu menu, int n);
-void SetMainMenu(Menu menu);
+void SetMainMenu(Menu menu); //FIXME remove
 
 MenuItem CreateTextMenuItem(const char *txt);
 MenuItem CreateImgTextMenuItem(Image img, const char *txt);

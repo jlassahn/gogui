@@ -2,6 +2,9 @@
 #import "Cocoa/Cocoa.h"
 #import "include/gui.h"
 
+@class iMenuItem;
+@class iMenu;
+
 @interface iImage : NSObject
 {
 	int width;
@@ -65,6 +68,8 @@
 {
 	NSWindow *window;
 	NSUInteger windowStyle;
+	NSMenu *nsmenu;
+	iMenu *menu;
 
 	void (*handle_close)(void *ctx);
 	void *handle_close_ctx;
@@ -74,6 +79,7 @@
 - (NSSize) windowWillResize : (NSWindow *) sender toSize: (NSSize) size;
 
 - (void) handleClose: (void (*)(void *)) fn withContext: (void *) ctx;
+- (void) setMenu: (iMenu *)m;
 @end
 
 @interface iButton : iElement
@@ -92,7 +98,6 @@
 - (int) bestHeight;
 @end
 
-@class iMenuItem;
 @interface iMenu : NSObject
 {
 	NSMenu *menu;
@@ -102,6 +107,7 @@
 }
 
 - (void) addMenuItem: (iMenuItem *)item;
+- (NSMenu *) getNSMenu;
 - (void) makeMain;
 @end
 

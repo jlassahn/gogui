@@ -70,6 +70,10 @@ func (w windowPtr) AddChild(el Element) {
 	C.AddChild(C.WindowToBox(w.ptr), el.getElementPtr().ptr)
 }
 
+func (w windowPtr) SetMenu(menu Menu) {
+	C.SetMenu(w.ptr, menu.getPtr().ptr);
+}
+
 func CreateTextButton(txt string) Button {
 
 	ctxt := C.CString(txt)
@@ -329,6 +333,7 @@ func (mi menuItemPtr) HandleMenuSelect(fn func()) {
 	itemSelectMap[mi.ptr] = fn
 }
 
+//FIXME remove from API
 func SetMainMenu(menu Menu) {
 	C.SetMainMenu(menu.getPtr().ptr)
 }
@@ -447,7 +452,6 @@ func (w windowPtr) HandleKeyUp(fn func(int)) {}
 func (w windowPtr) HandleRedraw(fn func(Graphics)) {}
 func (w windowPtr) ForceRedraw() {}
 func (w windowPtr) SetTitle(txt string) {}
-func (w windowPtr) SetMenu(menu Menu) {}
 
 func (b scrollBoxPtr) Show() {}
 func (b scrollBoxPtr) Hide() {}

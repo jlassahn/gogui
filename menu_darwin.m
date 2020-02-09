@@ -34,6 +34,11 @@
 		[ self->menu addItem: [it getNSItem]];
 		printf("number of items: %d\n", (int)[self->menu numberOfItems]);
 	}
+
+- (NSMenu *) getNSMenu
+	{
+		return self->menu;
+	}
 @end
 
 @implementation iMenuItem

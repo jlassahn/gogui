@@ -35,6 +35,7 @@
 		self->top = Pos(0, 0);
 		self->right = Pos(100, 0);
 		self->bottom = Pos(100, 0);
+		self->menu = NULL;
 
 		[self->window setDelegate: self];
 
@@ -77,6 +78,7 @@
 - (void) windowDidBecomeKey: (NSNotification *)notification
 	{
 		printf("FIXME became key\n");
+		[NSApp setMainMenu: self->nsmenu];
 	}
 
 - (void) show
@@ -103,6 +105,12 @@
 		self->handle_close = fn;
 		self->handle_close_ctx = ctx;
 	}
+
+- (void) setMenu: (iMenu *)m
+	{
+		self->menu = m;
+		self->nsmenu = [m getNSMenu];
+	}
 @end
 
 
@@ -124,5 +132,10 @@ Box WindowToBox(Window w)
 void HandleClose(Window window, void (*fn)(void *), void *ctx)
 {
 	[(iWindow *)window handleClose: fn withContext: ctx];
+}
+
+void SetMenu(Window window, Menu menu)
+{
+	[(iWindow *)window setMenu: (iMenu *)menu];
 }
 
