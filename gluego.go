@@ -40,6 +40,10 @@ func RunEventLoop() int {
 	return int(C.RunEventLoop())
 }
 
+func HandleAppOpenFile(fn func(string) error) {
+	appOpenFileHandler = fn
+}
+
 func CreateWindow() Window {
 	window := C.CreateWindow()
 	C.SetWindowCallbacks(window)
@@ -378,10 +382,23 @@ type graphicsPtr struct { ptr C.Graphics }
 type fontPtr struct { ptr C.Font }
 
 
+var appOpenFileHandler func(string) error
 var windowCloseMap = map[C.Window] func() {}
 var buttonClickMap = map[C.Button] func() {}
 var boxRedrawMap = map[C.Box] func(Graphics) {}
 var itemSelectMap = map[C.MenuItem] func() {}
+
+//export appOpenFileCallback
+func appOpenFileCallback(txt *C.char) C.char {
+	if appOpenFileHandler != nil {
+		str := C.GoString(txt)
+		if appOpenFileHandler(str) != nil {
+			return 1
+		}
+		return 0
+	}
+	return 0
+}
 
 //export windowCloseCallback
 func windowCloseCallback(w C.Window) {

@@ -8,8 +8,15 @@
 -(void) sendEvent: (NSEvent *) event;
 @end
 
+@interface GUIDelegate : NSObject <NSApplicationDelegate>
+{ }
+- (BOOL) application: (NSApplication *)sender openFile: (NSString *)filename;
+@end
+
 static int eventReturn;
 
+//FIXME should set handler through C interface!
+extern BOOL appOpenFileCallback(char *txt);
 
 @implementation GUIApplication
 -(void) sendEvent: (NSEvent *) event;
@@ -24,6 +31,13 @@ static int eventReturn;
 }
 @end
 
+@implementation GUIDelegate
+- (BOOL) application: (NSApplication *)sender openFile: (NSString *)filename
+{
+	return appOpenFileCallback((char *)[filename UTF8String]);
+}
+@end
+
 POSITION Pos(int pct, int off)
 {
 	POSITION ret;
@@ -34,7 +48,11 @@ POSITION Pos(int pct, int off)
 
 void Init(void)
 {
+	GUIDelegate *del;
+
+	del = [[GUIDelegate alloc] init];
 	[GUIApplication sharedApplication];
+	[NSApp setDelegate: del];
 }
 
 void Exit(void)
