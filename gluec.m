@@ -5,82 +5,87 @@
 
 
 // externs for Golang calls
-extern void windowCloseCallback(Window w);
-extern void buttonClickCallback(Button b);
-extern void boxRedrawCallback(Box b, Graphics gfx);
-extern void itemSelectCallback(MenuItem m);
+extern bool gorouteAppOpenFile(const char *name);
+extern void gorouteWindowClose(Window w);
+extern void gorouteButtonClick(Button b);
+extern void gorouteBoxRedraw(Box b, Graphics gfx);
+extern void gorouteItemSelect(MenuItem m);
 
 
 // static C redirect functions that can be called through pointers
-static void windowClose(void *ctx)
+static bool crouteAppOpenFile(void *ctx, const char *name)
 {
-	windowCloseCallback((Window)ctx);
+	return gorouteAppOpenFile(name);
 }
 
-static void buttonClick(void *ctx)
-{
-	buttonClickCallback((Button)ctx);
-}
+static void crouteWindowClose(void *ctx) { gorouteWindowClose((Window)ctx); }
 
-static void boxResize(void *ctx) {}
-static void boxMouseMove(void *ctx, int x, int y) {}
-static void boxMouseDown(void *ctx, int btn) {}
-static void boxMouseUp(void *ctx, int btn) {}
-static void boxMouseEnter(void *ctx) {}
-static void boxMouseLeave(void *ctx) {}
-static void boxKeyDown(void *ctx, int kc) {}
-static void boxKeyUp(void *ctx, int kc) {}
+static void crouteButtonClick(void *ctx) { gorouteButtonClick((Button)ctx); }
 
-static void boxRedraw(void *ctx, Graphics gfx) {
+static void crouteBoxResize(void *ctx) {}
+static void crouteBoxMouseMove(void *ctx, int x, int y) {}
+static void crouteBoxMouseDown(void *ctx, int btn) {}
+static void crouteBoxMouseUp(void *ctx, int btn) {}
+static void crouteBoxMouseEnter(void *ctx) {}
+static void crouteBoxMouseLeave(void *ctx) {}
+static void crouteBoxKeyDown(void *ctx, int kc) {}
+static void crouteBoxKeyUp(void *ctx, int kc) {}
+
+static void crouteBoxRedraw(void *ctx, Graphics gfx) {
 	printf("static boxRedraw\n");
-	boxRedrawCallback((Box)ctx, gfx);
+	gorouteBoxRedraw((Box)ctx, gfx);
 }
 
-static void itemSelect(void *ctx) {
-	itemSelectCallback((MenuItem)ctx);
+static void crouteItemSelect(void *ctx) {
+	gorouteItemSelect((MenuItem)ctx);
 }
 
 // setup functions called from Go
+void SetGlobalCallbacks(void)
+{
+	HandleAppOpenFile(crouteAppOpenFile, NULL);
+}
+
 void SetWindowCallbacks(Window window)
 {
-	HandleClose(window, windowClose, window);
+	HandleClose(window, crouteWindowClose, window);
 }
 
 void SetButtonCallbacks(Button button)
 {
-	HandleClick(button, buttonClick, button);
+	HandleClick(button, crouteButtonClick, button);
 }
 
 void SetBoxCallbacks(Box box)
 {
-	HandleResize(box, boxResize, box);
-	HandleMouseMove(box, boxMouseMove, box);
-	HandleMouseDown(box, boxMouseDown, box);
-	HandleMouseUp(box, boxMouseUp, box);
-	HandleMouseEnter(box, boxMouseEnter, box);
-	HandleMouseLeave(box, boxMouseLeave, box);
-	HandleKeyDown(box, boxKeyDown, box);
-	HandleKeyUp(box, boxKeyUp, box);
-	HandleRedraw(box, boxRedraw, box);
+	HandleResize(box, crouteBoxResize, box);
+	HandleMouseMove(box, crouteBoxMouseMove, box);
+	HandleMouseDown(box, crouteBoxMouseDown, box);
+	HandleMouseUp(box, crouteBoxMouseUp, box);
+	HandleMouseEnter(box, crouteBoxMouseEnter, box);
+	HandleMouseLeave(box, crouteBoxMouseLeave, box);
+	HandleKeyDown(box, crouteBoxKeyDown, box);
+	HandleKeyUp(box, crouteBoxKeyUp, box);
+	HandleRedraw(box, crouteBoxRedraw, box);
 }
 
 void SetScrollBoxCallbacks(ScrollBox b)
 {
 	//FIXME do we need to cast to Box?
 	Box box = ScrollBoxToBox(b);
-	HandleResize(box, boxResize, box);
-	HandleMouseMove(box, boxMouseMove, box);
-	HandleMouseDown(box, boxMouseDown, box);
-	HandleMouseUp(box, boxMouseUp, box);
-	HandleMouseEnter(box, boxMouseEnter, box);
-	HandleMouseLeave(box, boxMouseLeave, box);
-	HandleKeyDown(box, boxKeyDown, box);
-	HandleKeyUp(box, boxKeyUp, box);
-	HandleRedraw(box, boxRedraw, box);
+	HandleResize(box, crouteBoxResize, box);
+	HandleMouseMove(box, crouteBoxMouseMove, box);
+	HandleMouseDown(box, crouteBoxMouseDown, box);
+	HandleMouseUp(box, crouteBoxMouseUp, box);
+	HandleMouseEnter(box, crouteBoxMouseEnter, box);
+	HandleMouseLeave(box, crouteBoxMouseLeave, box);
+	HandleKeyDown(box, crouteBoxKeyDown, box);
+	HandleKeyUp(box, crouteBoxKeyUp, box);
+	HandleRedraw(box, crouteBoxRedraw, box);
 }
 
 void SetMenuCallbacks(MenuItem m)
 {
-	HandleMenuSelect(m, itemSelect, m);
+	HandleMenuSelect(m, crouteItemSelect, m);
 }
 

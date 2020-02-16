@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #import "include/gui.h"
 
+extern void SetGlobalCallbacks(void);
 extern void SetWindowCallbacks(Window window);
 extern void SetButtonCallbacks(Button button);
 extern void SetBoxCallbacks(Box box);

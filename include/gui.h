@@ -1,5 +1,6 @@
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct _POSITION
 {
@@ -40,6 +41,8 @@ typedef struct iMenuItem *MenuItem;
 typedef struct iImage *Image;
 typedef struct iGraphics *Graphics;
 typedef struct iFont *Font;
+
+typedef struct iFileDialog *FileDialog;
 
 
 Element BoxToElement(Box b);
@@ -147,8 +150,17 @@ void EndDrawToImage(Image img, Graphics gfx);
 Font CreateFont(const char *family, int style);
 void DestroyFont(Font font);
 
+FileDialog CreateOpenFileDialog(void);
+void DestroyFileDialog(FileDialog dlg);
+bool RunDialog(FileDialog dlg); //FIXME subclass
+void SetFileDialogFile(FileDialog dlg, const char *filename);
+const char *GetFileDialogFile(FileDialog dlg);
+
 void Init(void);
 void Exit(void);
 void StopEventLoop(int ret);
 int RunEventLoop(void);
+
+// FIXME MacOS specific stuff...
+void HandleAppOpenFile(bool (*fn)(void *, const char *), void *ctx);
 

@@ -1,6 +1,24 @@
 
 package gogui
 
+// #include "glue.h"
+//
+import "C"
+
+const (
+	// Join Styles
+	JOIN_ROUND int = C.JOIN_ROUND
+	JOIN_MITER int = C.JOIN_MITER
+	JOIN_BEVEL int = C.JOIN_BEVEL
+
+	// Font Styles
+	FONT_NORMAL int = C.FONT_NORMAL
+	FONT_BOLD int = C.FONT_BOLD
+	FONT_ITALIC int = C.FONT_ITALIC
+	FONT_BOLD_ITALIC int = C.FONT_BOLD_ITALIC
+	// It's valid to assume FONT_BOLD_ITALIC == FONT_BOLD + FONT_ITALIC
+)
+
 type Position struct {
 	Percent int16
 	Offset int16
@@ -13,103 +31,6 @@ type Color struct {
 	A uint8
 }
 
-type Element interface {
-	getElementPtr() elementPtr
-	SetPosition(left, top, right, bottom Position)
-	Show()
-	Hide()
-	Destroy()
-	Parent() Element
-}
-
-type Box interface {
-	Element
-	AddChild(el Element)
-	RemoveChild(n int)
-	GetChildCount() int
-	GetChild(n int) Element
-	HandleResize(fn func())
-	HandleMouseMove(fn func(int, int))
-	HandleMouseDown(fn func(int))
-	HandleMouseUp(fn func(int))
-	HandleMouseEnter(fn func())
-	HandleMouseLeave(fn func())
-	HandleKeyDown(fn func(int))
-	HandleKeyUp(fn func(int))
-	HandleRedraw(fn func(Graphics))
-	ForceRedraw()
-}
-
-type ScrollBox interface {
-	Box
-	SetContentSize(width int, height int)
-}
-
-type Window interface {
-	Box
-
-	SetTitle(txt string)
-	SetMenu(menu Menu)
-
-	HandleClose(fn func())
-}
-
-type Button interface {
-	Element
-	GetBestWidth() int
-	GetBestHeight() int
-	HandleClick(fn func())
-	SetText(txt string)
-	SetImage(img Image)
-}
-
-type Menu interface {
-	getPtr() menuPtr
-	AddMenuItem(item MenuItem)
-	GetMenuItemCount() int
-	GetMenuItem(n int) MenuItem
-}
-
-type MenuItem interface {
-	Menu
-	HandleMenuSelect(fn func())
-}
-
-type Image interface {
-	getPtr() imagePtr
-	Destroy();
-	GetImageBuffer() []byte
-	BeginDraw() Graphics
-	EndDraw(gfx Graphics)
-}
-
-type Font fontPtr
-
-type Graphics interface {
-	GetCanvasWidth() int
-	GetCanvasHeight() int
-	SetStrokeColor(color Color)
-	SetFillColor(color Color)
-	SetLineWidth(width float64)
-	SetLineJoin(joinStyle int)
-	StartPath(x float64, y float64)
-	LineTo(x float64, y float64)
-	CurveTo(c1x float64, c1y float64,
-			c2x float64, c2y float64,
-			x float64, y float64)
-	ClosePath()
-	StrokePath()
-	FillPath()
-	FillCanvas()
-	SetFont(font Font, size float64)
-	SetDefaultFont() //selects a font used for normal UI text
-	DrawText(x float64, y float64, angle float64, txt string)
-	MeasureText(txt string) float64
-	DrawImage(x float64, y float64,
-			width float64, height float64,
-			img Image)
-}
-
 func Pos(pct int, offset int) Position {
 	return Position{
 		int16(pct),
@@ -117,4 +38,41 @@ func Pos(pct int, offset int) Position {
 	}
 }
 
+func cpos(x Position) C.POSITION {
+	return C.POSITION {
+		C.short(x.Percent),
+		C.short(x.Offset),
+	}
+}
+
+func ccol(x Color) C.COLOR {
+	return C.COLOR {
+		C.uchar(x.R),
+		C.uchar(x.G),
+		C.uchar(x.B),
+		C.uchar(x.A),
+	}
+}
+
+func Init() {
+	C.Init();
+	C.SetGlobalCallbacks();
+}
+
+func Exit() {
+	C.Exit();
+}
+
+func StopEventLoop(ret int) {
+	C.StopEventLoop(C.int(ret));
+}
+
+func RunEventLoop() int {
+	return int(C.RunEventLoop())
+}
+
+
+func HandleAppOpenFile(fn func(string) error) {
+	appOpenFileHandler = fn
+}
 

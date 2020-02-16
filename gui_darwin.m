@@ -3,6 +3,9 @@
 #import "Cocoa/Cocoa.h"
 #import "include/m_gui.h"
 
+static void *appOpenFileContext;
+static bool (*appOpenFileCallback)(void *ctx, const char *txt);
+
 @interface GUIApplication : NSApplication
 { }
 -(void) sendEvent: (NSEvent *) event;
@@ -14,9 +17,6 @@
 @end
 
 static int eventReturn;
-
-//FIXME should set handler through C interface!
-extern BOOL appOpenFileCallback(char *txt);
 
 @implementation GUIApplication
 -(void) sendEvent: (NSEvent *) event;
@@ -34,7 +34,10 @@ extern BOOL appOpenFileCallback(char *txt);
 @implementation GUIDelegate
 - (BOOL) application: (NSApplication *)sender openFile: (NSString *)filename
 {
-	return appOpenFileCallback((char *)[filename UTF8String]);
+	if (appOpenFileCallback)
+		return appOpenFileCallback(appOpenFileContext, [filename UTF8String]);
+	else
+		return NO;
 }
 @end
 
@@ -83,4 +86,11 @@ int RunEventLoop(void)
 	[NSApp run];
 	return eventReturn;
 }
+
+void HandleAppOpenFile(bool (*fn)(void *, const char *), void *ctx)
+{
+	appOpenFileCallback = fn;
+	appOpenFileContext = ctx;
+}
+
 

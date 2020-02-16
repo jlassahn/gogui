@@ -121,6 +121,18 @@
 - (void) handleSelect: (void (*)(void *)) fn withContext: (void *) ctx;
 @end
 
+@interface iFileDialog : NSObject
+{
+	NSSavePanel *nspanel;
+}
+
+- (id) initAsOpen;
+- (BOOL) run;
+- (void) setFile: (NSString *)filename;
+- (NSString *) file;
+
+@end
+
 
 Graphics gfxStartRender(int width, int height);
 void gfxEndRender(Graphics gfx);
