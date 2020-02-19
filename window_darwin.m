@@ -4,19 +4,19 @@
 
 
 @implementation iWindow
-- (id) init
+
+- (id) initWithStyle: (int) mode
 	{
 		NSWindow *win;
 
 		NSRect windowRect = [[NSScreen mainScreen] visibleFrame];
 
-		NSUInteger winStyle =
-			NSWindowStyleMaskTitled |
-			NSWindowStyleMaskClosable |
-			NSWindowStyleMaskMiniaturizable |
-			NSWindowStyleMaskResizable;
+		NSUInteger winStyle = 0;
+		if (mode & WINDOW_TITLED) winStyle |= NSWindowStyleMaskTitled;
+		if (mode & WINDOW_CLOSABLE) winStyle |= NSWindowStyleMaskClosable;
+		if (mode & WINDOW_SIZABLE) winStyle |= NSWindowStyleMaskMiniaturizable |
+		                                       NSWindowStyleMaskResizable;
 
-		// FIXME set window level to something like NSFloatingWindowLevel for topmost
 		windowRect = [NSWindow
 			contentRectForFrameRect: windowRect
 			styleMask: winStyle];
@@ -27,6 +27,11 @@
 			backing:NSBackingStoreBuffered
 			defer:NO];
 
+		if (mode & WINDOW_TOPMOST)
+		{
+			[win setLevel: NSFloatingWindowLevel];
+		}
+		// FIXME set window level to something like NSFloatingWindowLevel for topmost
 
 		self = [super initWithView: [win contentView]];
 
@@ -46,7 +51,6 @@
 		return self;
 	}
 
-	//FIXME figure out how to get the window close message without autoclosing the window
 - (BOOL) windowShouldClose : (NSWindow *) sender
 	{
 		NSLog(@"FIXME should close");
@@ -128,7 +132,7 @@
 
 Window CreateWindow(int mode)
 {
-	return (Window)[[iWindow alloc] init];
+	return (Window)[[iWindow alloc] initWithStyle: mode];
 }
 
 Element WindowToElement(Window w)

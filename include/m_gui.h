@@ -75,6 +75,8 @@
 	void (*handle_close)(void *ctx);
 	void *handle_close_ctx;
 }
+
+- (id) initWithStyle : (int) mode;
 - (BOOL) windowShouldClose : (NSWindow *) sender;
 - (void) windowWillClose : (NSNotification *) note;
 - (NSSize) windowWillResize : (NSWindow *) sender toSize: (NSSize) size;
