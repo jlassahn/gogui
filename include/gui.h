@@ -19,7 +19,7 @@ typedef struct _COLOR
 	uint8_t a;
 } COLOR;
 
-// Join Styles
+// Line Join Styles
 #define JOIN_ROUND 1
 #define JOIN_MITER 2
 #define JOIN_BEVEL 3
@@ -30,6 +30,14 @@ typedef struct _COLOR
 #define FONT_ITALIC 2
 #define FONT_BOLD_ITALIC 3
 // It's valid to assume FONT_BOLD_ITALIC == FONT_BOLD + FONT_ITALIC
+
+// Window Styles
+#define WINDOW_TITLED   0x0001
+#define WINDOW_CLOSABLE 0x0002
+#define WINDOW_SIZABLE  0x0004
+#define WINDOW_TOPMOST  0x0010
+
+#define WINDOW_NORMAL   0x0007
 
 typedef struct iElement *Element;
 typedef struct iBox *Box;
@@ -84,7 +92,7 @@ void HandleKeyUp(Box box, void (*fn)(void *, int), void *ctx);
 void HandleRedraw(Box box, void (*fn)(void *, Graphics), void *ctx);
 void ForceRedraw(Box box);
 
-Window CreateWindow(void);
+Window CreateWindow(int mode);
 void SetTitle(Window window, const char *txt);
 void SetMenu(Window window, Menu menu);
 void HandleClose(Window window, void (*fn)(void *), void *ctx);

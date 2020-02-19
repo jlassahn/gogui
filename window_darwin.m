@@ -16,6 +16,7 @@
 			NSWindowStyleMaskMiniaturizable |
 			NSWindowStyleMaskResizable;
 
+		// FIXME set window level to something like NSFloatingWindowLevel for topmost
 		windowRect = [NSWindow
 			contentRectForFrameRect: windowRect
 			styleMask: winStyle];
@@ -48,14 +49,17 @@
 	//FIXME figure out how to get the window close message without autoclosing the window
 - (BOOL) windowShouldClose : (NSWindow *) sender
 	{
-		return YES;
+		NSLog(@"FIXME should close");
+		if (self->handle_close)
+			self->handle_close(self->handle_close_ctx);
+
+		return NO;
+		//return YES;
 	}
 
 - (void) windowWillClose : (NSNotification *) note
 	{
 		NSLog(@"FIXME will close");
-		if (self->handle_close)
-			self->handle_close(self->handle_close_ctx);
 	}
 
 - (NSSize) windowWillResize: (NSWindow *) sender toSize: (NSSize) size
@@ -111,10 +115,18 @@
 		self->menu = m;
 		self->nsmenu = [m getNSMenu];
 	}
+
+- (void) destroy
+	{
+		NSLog(@"FIXME Window Destroy called");
+		[window close];
+		window = NULL;
+		[self release];
+	}
 @end
 
 
-Window CreateWindow(void)
+Window CreateWindow(int mode)
 {
 	return (Window)[[iWindow alloc] init];
 }

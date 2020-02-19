@@ -36,7 +36,7 @@ func main() {
 	gogui.Init()
 	defer gogui.Exit()
 
-	window := gogui.CreateWindow()
+	window := gogui.CreateWindow(gogui.WINDOW_NORMAL)
 	window.SetPosition(
 		gogui.Pos(50, 0),
 		gogui.Pos(10, 0),

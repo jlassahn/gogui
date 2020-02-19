@@ -74,7 +74,6 @@ func (b boxPtr) HandleKeyUp(fn func(int)) {}
 func (b boxPtr) ForceRedraw() {}
 
 func (w windowPtr) Hide() {}
-func (w windowPtr) Destroy() {}
 func (w windowPtr) Parent() Element { return nil }
 func (w windowPtr) RemoveChild(n int) {}
 func (w windowPtr) GetChildCount() int { return 0 }

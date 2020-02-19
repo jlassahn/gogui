@@ -16,8 +16,8 @@ type Window interface {
 
 type windowPtr struct { ptr C.Window }
 
-func CreateWindow() Window {
-	window := C.CreateWindow()
+func CreateWindow(mode int) Window {
+	window := C.CreateWindow(C.int(mode))
 	C.SetWindowCallbacks(window)
 	return windowPtr{window}
 }
@@ -47,7 +47,11 @@ func (w windowPtr) AddChild(el Element) {
 }
 
 func (w windowPtr) SetMenu(menu Menu) {
-	C.SetMenu(w.ptr, menu.getPtr().ptr);
+	C.SetMenu(w.ptr, menu.getPtr().ptr)
+}
+
+func (w windowPtr) Destroy() {
+	C.Destroy(C.WindowToElement(w.ptr))
 }
 
 //export gorouteWindowClose

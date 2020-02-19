@@ -40,6 +40,11 @@
 	{
 		NSLog(@"FIXME base Show called");
 	}
+
+- (void) destroy
+	{
+		NSLog(@"FIXME base Destroy called");
+	}
 @end
 
 void SetPosition(Element element,
@@ -58,5 +63,10 @@ void SetPosition(Element element,
 void Show(Element element)
 {
 	[(iElement *)element show];
+}
+
+void Destroy(Element element)
+{
+	[(iElement *)element destroy];
 }
 

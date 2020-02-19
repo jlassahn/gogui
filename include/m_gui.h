@@ -38,6 +38,7 @@
 
 - (void) resizeChildren: (NSSize) size;
 - (void) show;
+- (void) destroy;
 
 @end
 
