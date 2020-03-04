@@ -3,19 +3,22 @@
 
 @implementation iMenu
 
-- (void) makeMain
-	{
-		[NSApp setMainMenu: self->menu];
-	}
-
 - (id) init
 	{
+		MenuItem appMenu;
+
 		self = [super init];
 		if (!self)
 			return self;
 
 		self->menu = [[NSMenu alloc] init];
 		[self->menu setAutoenablesItems: NO];
+
+
+		appMenu = CreateTextMenuItem("Application");
+		[self addMenuItem: (iMenuItem *)appMenu];
+		self->_applicationMenu = (iMenuItem *)appMenu;
+
 		return self;
 	}
 
@@ -30,9 +33,12 @@
 
 - (void) addMenuItem: (iMenuItem *)it
 	{
-		printf("adding menu item: %p to %p\n", [it getNSItem], self->menu);
 		[ self->menu addItem: [it getNSItem]];
-		printf("number of items: %d\n", (int)[self->menu numberOfItems]);
+	}
+
+- (void) addMenuSeparator
+	{
+		[ self->menu addItem: [NSMenuItem separatorItem]];
 	}
 
 - (NSMenu *) getNSMenu
@@ -69,12 +75,10 @@
 	{
 		if (self->menu == NULL)
 		{
-			printf("adding first submenu to %p\n", self);
 			self->menu = [[NSMenu alloc] initWithTitle: self->text];
 			[self->menu setAutoenablesItems: NO];
 			[self->item setSubmenu: self->menu];
 		}
-		printf("adding item to %p\n", self);
 		[ self->menu addItem: [it getNSItem]];
 	}
 
@@ -90,6 +94,12 @@
 		if (self->handle_select)
 			self->handle_select(self->handle_select_ctx);
 	}
+
+- (void) setShortcut: (NSString *)str
+	{
+		[self->item setKeyEquivalent: str];
+	}
+
 @end
 
 Menu CreateMenu(void)
@@ -108,9 +118,10 @@ MenuItem CreateImgTextMenuItem(Image img, const char *txt)
 	return NULL;
 }
 
-void SetMainMenu(Menu m)
+void SetMenuShortcut(MenuItem item, const char *key)
 {
-	[ (iMenu *)m makeMain];
+	NSString *str = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
+	[(iMenuItem *)item setShortcut: str];
 }
 
 Menu MenuItemToMenu(MenuItem mi)
@@ -123,8 +134,18 @@ void AddMenuItem(Menu  menu, MenuItem item)
 	[ (iMenu *)menu addMenuItem: (iMenuItem *)item];
 }
 
+void AddMenuSeparator(Menu  menu)
+{
+	[ (iMenu *)menu addMenuSeparator];
+}
+
 void HandleMenuSelect(MenuItem item, void (*fn)(void *), void *ctx)
 {
 	[(iMenuItem *)item handleSelect: fn withContext: ctx];
+}
+
+MenuItem GetApplicationMenu(Menu menu)
+{
+	return (MenuItem)[(iMenu *)menu applicationMenu];
 }
 

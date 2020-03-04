@@ -7,7 +7,6 @@ package gogui
 // #include "glue.h"
 //
 import "C"
-import "fmt"
 
 
 
@@ -39,11 +38,9 @@ func gorouteButtonClick(b C.Button) {
 
 //export gorouteBoxRedraw
 func gorouteBoxRedraw(b C.Box, cgfx C.Graphics) {
-	fmt.Printf("boxRedrawCallback lookup %p\n", b)
 	gfx := graphicsPtr{cgfx}
 	fn := boxRedrawMap[b]
 	if fn != nil {
-		fmt.Printf("calling callback\n")
 		fn(gfx)
 	}
 }
@@ -72,23 +69,6 @@ func (b boxPtr) HandleMouseLeave(fn func()) {}
 func (b boxPtr) HandleKeyDown(fn func(int)) {}
 func (b boxPtr) HandleKeyUp(fn func(int)) {}
 func (b boxPtr) ForceRedraw() {}
-
-func (w windowPtr) Hide() {}
-func (w windowPtr) Parent() Element { return nil }
-func (w windowPtr) RemoveChild(n int) {}
-func (w windowPtr) GetChildCount() int { return 0 }
-func (w windowPtr) GetChild(n int) Element { return nil }
-func (w windowPtr) HandleResize(fn func()) {}
-func (w windowPtr) HandleMouseMove(fn func(int, int)) {}
-func (w windowPtr) HandleMouseDown(fn func(int)) {}
-func (w windowPtr) HandleMouseUp(fn func(int)) {}
-func (w windowPtr) HandleMouseEnter(fn func()) {}
-func (w windowPtr) HandleMouseLeave(fn func()) {}
-func (w windowPtr) HandleKeyDown(fn func(int)) {}
-func (w windowPtr) HandleKeyUp(fn func(int)) {}
-func (w windowPtr) HandleRedraw(fn func(Graphics)) {}
-func (w windowPtr) ForceRedraw() {}
-func (w windowPtr) SetTitle(txt string) {}
 
 func (b scrollBoxPtr) Show() {}
 func (b scrollBoxPtr) Hide() {}

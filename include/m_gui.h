@@ -83,6 +83,7 @@
 
 - (void) handleClose: (void (*)(void *)) fn withContext: (void *) ctx;
 - (void) setMenu: (iMenu *)m;
+- (void) setTitle: (NSString *)txt;
 @end
 
 @interface iButton : iElement
@@ -109,9 +110,11 @@
 	void *handle_select_ctx;
 }
 
+@property (readonly) iMenuItem *applicationMenu;
+
 - (void) addMenuItem: (iMenuItem *)item;
+- (void) addMenuSeparator;
 - (NSMenu *) getNSMenu;
-- (void) makeMain;
 @end
 
 @interface iMenuItem : iMenu
@@ -122,6 +125,7 @@
 - (id) initWithText: (NSString *) txt;
 - (NSMenuItem *) getNSItem;
 - (void) handleSelect: (void (*)(void *)) fn withContext: (void *) ctx;
+- (void) setShortcut: (NSString *)str;
 @end
 
 @interface iFileDialog : NSObject

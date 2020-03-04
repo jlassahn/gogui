@@ -27,13 +27,11 @@
 		[(NSScrollView *)self->view setHasVerticalScroller: YES];
 		[(NSScrollView *)self->view setHasHorizontalScroller: YES];
 
-		printf("scrollbar %p\n", [(NSScrollView *)self->view horizontalScroller]);
 		return self;
 	}
 
 - (void) handleRedraw: (void (*)(void *, Graphics)) fn withContext: (void *) ctx
 	{
-		printf("scrollbox handleRedraw call\n");
 		[self->contentBox handleRedraw: fn withContext: ctx];
 	}
 

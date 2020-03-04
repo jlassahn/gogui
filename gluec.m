@@ -32,7 +32,6 @@ static void crouteBoxKeyDown(void *ctx, int kc) {}
 static void crouteBoxKeyUp(void *ctx, int kc) {}
 
 static void crouteBoxRedraw(void *ctx, Graphics gfx) {
-	printf("static boxRedraw\n");
 	gorouteBoxRedraw((Box)ctx, gfx);
 }
 

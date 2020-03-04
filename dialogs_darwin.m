@@ -13,6 +13,10 @@
 		return self;
 
 	nspanel = [[NSOpenPanel alloc] init];
+	// FIXME so we want to set file type limits?
+	//NSArray *filetypes = @[ @"json", @"msch"];
+	//[nspanel  setAllowedFileTypes: filetypes];
+	//[nspanel setAllowsOtherFileTypes: YES];
 	return self;
 }
 

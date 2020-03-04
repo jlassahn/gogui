@@ -8,7 +8,6 @@
 		Right: (POSITION)rightIn
 		Bottom: (POSITION)bottomIn
 	{
-		NSLog(@"FIXME base SetPosition called");
 		self->left = leftIn;
 		self->top = topIn;
 		self->right = rightIn;

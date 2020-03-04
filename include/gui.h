@@ -99,13 +99,17 @@ void HandleClose(Window window, void (*fn)(void *), void *ctx);
 
 Menu CreateMenu(void);
 void AddMenuItem(Menu  menu, MenuItem item);
+void AddMenuSeparator(Menu  menu);
 int GetMenuItemCount(Menu menu);
 MenuItem GetMenuItem(Menu menu, int n);
-void SetMainMenu(Menu menu); //FIXME remove
+
+// returns MacOS app menu, Windows returns NULL
+MenuItem GetApplicationMenu(Menu menu);
 
 MenuItem CreateTextMenuItem(const char *txt);
 MenuItem CreateImgTextMenuItem(Image img, const char *txt);
 void HandleMenuSelect(MenuItem item, void (*fn)(void *), void *ctx);
+void SetMenuShortcut(MenuItem item, const char *key);
 
 ScrollBox CreateScrollBox(void);
 void SetContentSize(ScrollBox box, int width, int height);

@@ -31,7 +31,8 @@
 		{
 			[win setLevel: NSFloatingWindowLevel];
 		}
-		// FIXME set window level to something like NSFloatingWindowLevel for topmost
+		// FIXME change the content view to something else to get access to
+		// drawRect, etc.
 
 		self = [super initWithView: [win contentView]];
 
@@ -53,23 +54,18 @@
 
 - (BOOL) windowShouldClose : (NSWindow *) sender
 	{
-		NSLog(@"FIXME should close");
 		if (self->handle_close)
 			self->handle_close(self->handle_close_ctx);
 
 		return NO;
-		//return YES;
 	}
 
 - (void) windowWillClose : (NSNotification *) note
 	{
-		NSLog(@"FIXME will close");
 	}
 
 - (NSSize) windowWillResize: (NSWindow *) sender toSize: (NSSize) size
 	{
-		NSLog(@"FIXME will resize");
-
 		NSRect rc;
 		rc.origin.x = 0;
 		rc.origin.y = 0;
@@ -85,7 +81,6 @@
 
 - (void) windowDidBecomeKey: (NSNotification *)notification
 	{
-		printf("FIXME became key\n");
 		[NSApp setMainMenu: self->nsmenu];
 	}
 
@@ -120,9 +115,13 @@
 		self->nsmenu = [m getNSMenu];
 	}
 
+- (void) setTitle: (NSString *)txt
+	{
+		[self->window setTitle: txt];
+	}
+
 - (void) destroy
 	{
-		NSLog(@"FIXME Window Destroy called");
 		[window close];
 		window = NULL;
 		[self release];
@@ -153,5 +152,12 @@ void HandleClose(Window window, void (*fn)(void *), void *ctx)
 void SetMenu(Window window, Menu menu)
 {
 	[(iWindow *)window setMenu: (iMenu *)menu];
+}
+
+void SetTitle(Window window, const char *title)
+{
+	NSString *str = [NSString stringWithCString:title encoding:NSUTF8StringEncoding];
+	[(iWindow *)window setTitle: str];
+
 }
 

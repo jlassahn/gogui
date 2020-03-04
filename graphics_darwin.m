@@ -52,7 +52,8 @@ int GetCanvasHeight(Graphics gfx)
 	return gfx->height;
 }
 
-void FillCanvas(Graphics gfx) {
+void FillCanvas(Graphics gfx)
+{
 	NSRect bounds;
 	bounds.origin.x = 0;
 	bounds.origin.y = 0;
@@ -61,32 +62,37 @@ void FillCanvas(Graphics gfx) {
 	NSRectFill(bounds);
 }
 
-void SetStrokeColor(Graphics gfx, COLOR color) {
-		NSColor *col = [NSColor
-			colorWithCalibratedRed: color.r/255.0
-			green: color.g/255.0
-			blue: color.b/255.0
-			alpha: color.a/255.0];
+void SetStrokeColor(Graphics gfx, COLOR color)
+{
+	// NSColor seems to always be autoreleased
+	NSColor *col = [NSColor
+		colorWithCalibratedRed: color.r/255.0
+		green: color.g/255.0
+		blue: color.b/255.0
+		alpha: color.a/255.0];
 
-		[col setStroke];
-		[gfx->fontAttributes setValue: col forKey: NSForegroundColorAttributeName];
+	[col setStroke];
+	[gfx->fontAttributes setValue: col forKey: NSForegroundColorAttributeName];
 }
 
-void SetFillColor(Graphics gfx, COLOR color) {
-		NSColor *col = [NSColor
-			colorWithCalibratedRed: color.r/255.0
-			green: color.g/255.0
-			blue: color.b/255.0
-			alpha: color.a/255.0];
+void SetFillColor(Graphics gfx, COLOR color)
+{
+	NSColor *col = [NSColor
+		colorWithCalibratedRed: color.r/255.0
+		green: color.g/255.0
+		blue: color.b/255.0
+		alpha: color.a/255.0];
 
-		[col setFill];
+	[col setFill];
 }
 
-void SetLineWidth(Graphics gfx, double width) {
+void SetLineWidth(Graphics gfx, double width)
+{
 	[gfx->path setLineWidth: width];
 }
 
-void SetLineJoin(Graphics gfx, int join_style) {
+void SetLineJoin(Graphics gfx, int join_style)
+{
 	switch(join_style)
 	{
 		case JOIN_MITER:
@@ -104,7 +110,8 @@ void SetLineJoin(Graphics gfx, int join_style) {
 	}
 }
 
-void StartPath(Graphics gfx, double x, double y) {
+void StartPath(Graphics gfx, double x, double y)
+{
 	NSPoint pt;
 	pt.x = x;
 	pt.y = gfx->height-y;
@@ -112,7 +119,8 @@ void StartPath(Graphics gfx, double x, double y) {
 	[gfx->path moveToPoint: pt];
 }
 
-void LineTo(Graphics gfx, double x, double y) {
+void LineTo(Graphics gfx, double x, double y)
+{
 	NSPoint pt;
 	pt.x = x;
 	pt.y = gfx->height-y;
@@ -122,8 +130,8 @@ void LineTo(Graphics gfx, double x, double y) {
 void CurveTo(Graphics gfx,
 		double c1x, double c1y,
 		double c2x, double c2y,
-		double x, double y) {
-
+		double x, double y)
+{
 	NSPoint c1;
 	c1.x = c1x;
 	c1.y = gfx->height-c1y;
@@ -139,24 +147,29 @@ void CurveTo(Graphics gfx,
 	[gfx->path curveToPoint: pt controlPoint1: c1 controlPoint2: c2];
 }
 
-void ClosePath(Graphics gfx) {
+void ClosePath(Graphics gfx)
+{
 	[gfx->path closePath];
 }
 
-void StrokePath(Graphics gfx) {
+void StrokePath(Graphics gfx)
+{
 	[gfx->path stroke];
 }
 
-void FillPath(Graphics gfx) {
+void FillPath(Graphics gfx)
+{
 	[gfx->path fill];
 }
 
-void SetFont(Graphics gfx, Font font, double size) {
+void SetFont(Graphics gfx, Font font, double size)
+{
 	NSFont *fnt = [NSFont fontWithName: [font->nsfont fontName] size: size];
 	[gfx->fontAttributes setValue: fnt forKey: NSFontAttributeName];
 }
 
-void SetDefaultFont(Graphics gfx) {
+void SetDefaultFont(Graphics gfx)
+{
 	NSFont *font = [NSFont systemFontOfSize: 0];
 	[gfx->fontAttributes setValue: font forKey: NSFontAttributeName];
 }
@@ -167,8 +180,8 @@ double MeasureText(Graphics gfx, const char *txt)
 	return [str sizeWithAttributes: gfx->fontAttributes].width;
 }
 
-void DrawText(Graphics gfx, double x, double y, double angle, const char *txt) {
-
+void DrawText(Graphics gfx, double x, double y, double angle, const char *txt)
+{
 	NSString *str = [NSString stringWithCString:txt encoding:NSUTF8StringEncoding];
 
 	NSAffineTransform *xform = [NSAffineTransform transform];
@@ -191,7 +204,10 @@ void DrawText(Graphics gfx, double x, double y, double angle, const char *txt) {
 void DrawImage(Graphics gfx,
 		double x, double y,
 		double width, double height,
-		Image img) {}
+		Image img)
+{
+	//FIXME implement
+}
 
 
 Font CreateFont(const char *family, int style)
