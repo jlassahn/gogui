@@ -113,6 +113,12 @@ void SetMenuShortcut(MenuItem item, const char *key);
 
 ScrollBox CreateScrollBox(void);
 void SetContentSize(ScrollBox box, int width, int height);
+void SetBackgroundColor(ScrollBox box, COLOR color);
+int GetVisibleWidth(ScrollBox box);
+int GetVisibleHeight(ScrollBox box);
+int GetVisibleLeft(ScrollBox box);
+int GetVisibleTop(ScrollBox box);
+void SetVisibleLeftTop(ScrollBox box, int left, int top);
 
 Button CreateTextButton(const char *txt);
 Button CreateImageButton(Image img);

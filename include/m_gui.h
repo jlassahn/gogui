@@ -44,10 +44,14 @@
 
 @interface iBox : iElement
 {
+@public
 	iElement *children;
 
 	void (*handle_redraw)(void *ctx, Graphics gfx);
 	void *handle_redraw_ctx;
+	void (*handle_mouse_move)(void *ctx, int x, int y);
+	void *handle_mouse_move_ctx;
+
 }
 
 - (id) initWithView: (NSView *) viewIn;
@@ -55,14 +59,22 @@
 
 - (void) addChild: (iElement *)child;
 - (void) handleRedraw: (void (*)(void *, Graphics)) fn withContext: (void *) ctx;
+- (void) forceRedraw;
 
 @end
 
 @interface iScrollBox : iBox
 {
 	iBox *contentBox;
+	int contentWidth;
+	int contentHeight;
 }
 - (void) setContentWidth: (int)width height: (int)height;
+- (void) setBackgroundColor: (NSColor *)col;
+- (int) visibleWidth;
+- (int) visibleHeight;
+- (int) visibleLeft;
+- (int) visibleTop;
 @end
 
 @interface iWindow : iBox <NSWindowDelegate>

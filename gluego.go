@@ -70,24 +70,6 @@ func (b boxPtr) HandleKeyDown(fn func(int)) {}
 func (b boxPtr) HandleKeyUp(fn func(int)) {}
 func (b boxPtr) ForceRedraw() {}
 
-func (b scrollBoxPtr) Show() {}
-func (b scrollBoxPtr) Hide() {}
-func (b scrollBoxPtr) Destroy() {}
-func (b scrollBoxPtr) Parent() Element { return nil }
-func (b scrollBoxPtr) AddChild(el Element) {}
-func (b scrollBoxPtr) RemoveChild(n int) {}
-func (b scrollBoxPtr) GetChildCount() int { return 0 }
-func (b scrollBoxPtr) GetChild(n int) Element { return nil }
-func (b scrollBoxPtr) HandleResize(fn func()) {}
-func (b scrollBoxPtr) HandleMouseMove(fn func(int, int)) {}
-func (b scrollBoxPtr) HandleMouseDown(fn func(int)) {}
-func (b scrollBoxPtr) HandleMouseUp(fn func(int)) {}
-func (b scrollBoxPtr) HandleMouseEnter(fn func()) {}
-func (b scrollBoxPtr) HandleMouseLeave(fn func()) {}
-func (b scrollBoxPtr) HandleKeyDown(fn func(int)) {}
-func (b scrollBoxPtr) HandleKeyUp(fn func(int)) {}
-func (b scrollBoxPtr) ForceRedraw() {}
-
 func (b buttonPtr) Show() {}
 func (b buttonPtr) Hide() {}
 func (b buttonPtr) Destroy() {}

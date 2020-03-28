@@ -27,6 +27,8 @@
 			backing:NSBackingStoreBuffered
 			defer:NO];
 
+		[win setAcceptsMouseMovedEvents: YES]; //FIXME is this needed?
+
 		if (mode & WINDOW_TOPMOST)
 		{
 			[win setLevel: NSFloatingWindowLevel];
@@ -47,7 +49,6 @@
 		[self->window setDelegate: self];
 
 		//FIXME learn about Activation, Key windows, Main Windows.
-		//FIXME think about acceptsMouseMovedEvents
 
 		return self;
 	}

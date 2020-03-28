@@ -29,6 +29,11 @@ static int eventReturn;
 
 	[super sendEvent:event];
 }
+
+-(void) noop: (id)unused
+{
+}
+
 @end
 
 @implementation GUIDelegate
@@ -53,9 +58,13 @@ void Init(void)
 {
 	GUIDelegate *del;
 
+	// create a NO-OP thread so Cocoa knows it's running multithreaded
+	[NSThread detachNewThreadSelector: @selector(noop) toTarget: NSApp withObject: NULL];
+
 	del = [[GUIDelegate alloc] init];
 	[GUIApplication sharedApplication];
 	[NSApp setDelegate: del];
+	[NSWindow setAllowsAutomaticWindowTabbing: NO];
 }
 
 void Exit(void)

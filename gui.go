@@ -61,6 +61,7 @@ func ccol(x Color) C.COLOR {
 	}
 }
 
+// FIXME do we need to call LockOSThread here?
 func Init() {
 	C.Init();
 	C.SetGlobalCallbacks();

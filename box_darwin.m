@@ -5,6 +5,7 @@
 @interface iView: NSView
 {
 	iBox *box;
+	NSTrackingArea *trackingArea;
 }
 - (id) initWithBox: (iBox *) b;
 - (void) drawRect: (NSRect) rect;
@@ -16,6 +17,26 @@
 	{
 		[super init];
 		self->box = b;
+
+		NSTrackingAreaOptions opts;
+		opts = NSTrackingMouseMoved
+		     | NSTrackingMouseEnteredAndExited
+		     | NSTrackingEnabledDuringMouseDrag
+		     | NSTrackingInVisibleRect
+		     | NSTrackingActiveAlways;
+		NSRect rc;
+		rc.origin.x = 0;
+		rc.origin.y = 0;
+		rc.size.width = 0;
+		rc.size.height = 0;
+		self->trackingArea = [[NSTrackingArea alloc]
+			initWithRect: rc
+				 options: opts
+				   owner: self
+			   userInfo: NULL];
+		[self addTrackingArea: self->trackingArea];
+
+		// FIXME release NSTrackingArea....
 		return self;
 	}
 
@@ -28,6 +49,42 @@
 		[self->box doRedraw: gfx];
 		gfxEndRender(gfx);
 	}
+
+- (void) mouseDown: (NSEvent *)event
+	{
+		NSLog(@"MOUSE DOWN %@", event);
+	}
+
+- (void) mouseUp: (NSEvent *)event
+	{
+		NSLog(@"MOUSE UP %@", event);
+	}
+
+- (void) mouseMoved: (NSEvent *)event
+	{
+		NSPoint pt = [self convertPoint: [event locationInWindow] fromView: NULL];
+
+		// FIXME invert y
+		if (box->handle_mouse_move)
+			box->handle_mouse_move(box->handle_mouse_move_ctx, pt.x, pt.y);
+		NSLog(@"MOUSE MOVED %f, %f", pt.x, pt.y);
+	}
+
+- (void) mouseDragged: (NSEvent *)event
+	{
+		NSLog(@"MOUSE DRAGGED %@", event);
+	}
+
+- (void) mouseEntered: (NSEvent *)event
+	{
+		NSLog(@"MOUSE ENTERED %@", event);
+	}
+
+- (void) mouseExited: (NSEvent *)event
+	{
+		NSLog(@"MOUSE EXITED %@", event);
+	}
+
 @end
 
 @implementation iBox
@@ -110,6 +167,11 @@
 		}
 	}
 
+- (void) forceRedraw
+	{
+		printf("FORCE REDRAW\n");
+		[self->view  display];
+	}
 @end
 
 Box CreateBox(void)
@@ -192,6 +254,6 @@ void HandleRedraw(Box box, void (*fn)(void *, Graphics), void *ctx)
 
 void ForceRedraw(Box box)
 {
-	//FIXME implement
+	[(iBox *)box forceRedraw];
 }
 

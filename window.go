@@ -61,6 +61,10 @@ func (w windowPtr) SetTitle(txt string) {
 	C.SetTitle(w.ptr, ctxt)
 }
 
+func (w windowPtr) ForceRedraw() {
+	C.ForceRedraw(C.WindowToBox(w.ptr))
+}
+
 func (w windowPtr) Destroy() {
 	C.Destroy(C.WindowToElement(w.ptr))
 }
@@ -87,5 +91,4 @@ func (w windowPtr) HandleMouseLeave(fn func()) {}
 func (w windowPtr) HandleKeyDown(fn func(int)) {}
 func (w windowPtr) HandleKeyUp(fn func(int)) {}
 func (w windowPtr) HandleRedraw(fn func(Graphics)) {}
-func (w windowPtr) ForceRedraw() {}
 
