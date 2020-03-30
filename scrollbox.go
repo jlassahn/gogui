@@ -13,6 +13,7 @@ type ScrollBox interface {
 	GetVisibleHeight() int
 	GetVisibleLeft() int
 	GetVisibleTop() int
+	SetVisibleLeftTop(left int, top int)
 }
 
 type scrollBoxPtr struct { ptr C.ScrollBox }
@@ -65,6 +66,10 @@ func (b scrollBoxPtr) GetVisibleLeft() int {
 
 func (b scrollBoxPtr) GetVisibleTop() int {
 	return int(C.GetVisibleTop(b.ptr))
+}
+
+func (b scrollBoxPtr) SetVisibleLeftTop(left int, top int) {
+	C.SetVisibleLeftTop(b.ptr, C.int(left), C.int(top))
 }
 
 func (b scrollBoxPtr) Show() {}
