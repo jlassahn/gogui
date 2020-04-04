@@ -9,6 +9,11 @@ extern bool gorouteAppOpenFile(const char *name);
 extern void gorouteWindowClose(Window w);
 extern void gorouteButtonClick(Button b);
 extern void gorouteBoxRedraw(Box b, Graphics gfx);
+extern void gorouteBoxMouseMove(Box b, int x, int y);
+extern void gorouteBoxMouseDown(Box b, int x, int y, int btn);
+extern void gorouteBoxMouseUp(Box b, int x, int y, int btn);
+extern void gorouteBoxMouseEnter(Box b);
+extern void gorouteBoxMouseLeave(Box b);
 extern void gorouteItemSelect(MenuItem m);
 
 
@@ -23,16 +28,31 @@ static void crouteWindowClose(void *ctx) { gorouteWindowClose((Window)ctx); }
 static void crouteButtonClick(void *ctx) { gorouteButtonClick((Button)ctx); }
 
 static void crouteBoxResize(void *ctx) {}
-static void crouteBoxMouseMove(void *ctx, int x, int y) {}
-static void crouteBoxMouseDown(void *ctx, int btn) {}
-static void crouteBoxMouseUp(void *ctx, int btn) {}
-static void crouteBoxMouseEnter(void *ctx) {}
-static void crouteBoxMouseLeave(void *ctx) {}
 static void crouteBoxKeyDown(void *ctx, int kc) {}
 static void crouteBoxKeyUp(void *ctx, int kc) {}
 
 static void crouteBoxRedraw(void *ctx, Graphics gfx) {
 	gorouteBoxRedraw((Box)ctx, gfx);
+}
+
+static void crouteBoxMouseMove(void *ctx, int x, int y) {
+	gorouteBoxMouseMove((Box)ctx, x, y);
+}
+
+static void crouteBoxMouseDown(void *ctx, int x, int y, int btn) {
+	gorouteBoxMouseDown((Box)ctx, x, y, btn);
+}
+
+static void crouteBoxMouseUp(void *ctx, int x, int y, int btn) {
+	gorouteBoxMouseUp((Box)ctx, x, y, btn);
+}
+
+static void crouteBoxMouseEnter(void *ctx) {
+	gorouteBoxMouseEnter((Box)ctx);
+}
+
+static void crouteBoxMouseLeave(void *ctx) {
+	gorouteBoxMouseLeave((Box)ctx);
 }
 
 static void crouteItemSelect(void *ctx) {

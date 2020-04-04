@@ -51,6 +51,14 @@
 	void *handle_redraw_ctx;
 	void (*handle_mouse_move)(void *ctx, int x, int y);
 	void *handle_mouse_move_ctx;
+	void (*handle_mouse_down)(void *ctx, int x, int y, int btn);
+	void *handle_mouse_down_ctx;
+	void (*handle_mouse_up)(void *ctx, int x, int y, int btn);
+	void *handle_mouse_up_ctx;
+	void (*handle_mouse_enter)(void *ctx);
+	void *handle_mouse_enter_ctx;
+	void (*handle_mouse_leave)(void *ctx);
+	void *handle_mouse_leave_ctx;
 
 }
 
@@ -59,6 +67,11 @@
 
 - (void) addChild: (iElement *)child;
 - (void) handleRedraw: (void (*)(void *, Graphics)) fn withContext: (void *) ctx;
+- (void) handleMouseMove: (void (*)(void *, int, int)) fn withContext: (void *) ctx;
+- (void) handleMouseDown: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx;
+- (void) handleMouseUp: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx;
+- (void) handleMouseEnter: (void (*)(void *)) fn withContext: (void *) ctx;
+- (void) handleMouseLeave: (void (*)(void *)) fn withContext: (void *) ctx;
 - (void) forceRedraw;
 
 @end

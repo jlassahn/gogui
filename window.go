@@ -84,8 +84,8 @@ func (w windowPtr) GetChildCount() int { return 0 }
 func (w windowPtr) GetChild(n int) Element { return nil }
 func (w windowPtr) HandleResize(fn func()) {}
 func (w windowPtr) HandleMouseMove(fn func(int, int)) {}
-func (w windowPtr) HandleMouseDown(fn func(int)) {}
-func (w windowPtr) HandleMouseUp(fn func(int)) {}
+func (w windowPtr) HandleMouseDown(fn func(int, int, int)) {}
+func (w windowPtr) HandleMouseUp(fn func(int, int, int)) {}
 func (w windowPtr) HandleMouseEnter(fn func()) {}
 func (w windowPtr) HandleMouseLeave(fn func()) {}
 func (w windowPtr) HandleKeyDown(fn func(int)) {}

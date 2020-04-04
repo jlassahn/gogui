@@ -13,8 +13,8 @@ type Box interface {
 	GetChild(n int) Element
 	HandleResize(fn func())
 	HandleMouseMove(fn func(int, int))
-	HandleMouseDown(fn func(int))
-	HandleMouseUp(fn func(int))
+	HandleMouseDown(fn func(int, int, int))
+	HandleMouseUp(fn func(int, int, int))
 	HandleMouseEnter(fn func())
 	HandleMouseLeave(fn func())
 	HandleKeyDown(fn func(int))

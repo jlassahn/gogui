@@ -48,6 +48,26 @@ func (b scrollBoxPtr) HandleRedraw(fn func(Graphics)) {
 	boxRedrawMap[C.ScrollBoxToBox(b.ptr)] = fn
 }
 
+func (b scrollBoxPtr) HandleMouseMove(fn func(int, int)) {
+	boxMouseMoveMap[C.ScrollBoxToBox(b.ptr)] = fn
+}
+
+func (b scrollBoxPtr) HandleMouseDown(fn func(int, int, int)) {
+	boxMouseDownMap[C.ScrollBoxToBox(b.ptr)] = fn
+}
+
+func (b scrollBoxPtr) HandleMouseUp(fn func(int, int, int)) {
+	boxMouseUpMap[C.ScrollBoxToBox(b.ptr)] = fn
+}
+
+func (b scrollBoxPtr) HandleMouseEnter(fn func()) {
+	boxMouseEnterMap[C.ScrollBoxToBox(b.ptr)] = fn
+}
+
+func (b scrollBoxPtr) HandleMouseLeave(fn func()) {
+	boxMouseLeaveMap[C.ScrollBoxToBox(b.ptr)] = fn
+}
+
 func (b scrollBoxPtr) ForceRedraw() {
 	C.ForceRedraw(C.ScrollBoxToBox(b.ptr))
 }
@@ -81,11 +101,6 @@ func (b scrollBoxPtr) RemoveChild(n int) {}
 func (b scrollBoxPtr) GetChildCount() int { return 0 }
 func (b scrollBoxPtr) GetChild(n int) Element { return nil }
 func (b scrollBoxPtr) HandleResize(fn func()) {}
-func (b scrollBoxPtr) HandleMouseMove(fn func(int, int)) {}
-func (b scrollBoxPtr) HandleMouseDown(fn func(int)) {}
-func (b scrollBoxPtr) HandleMouseUp(fn func(int)) {}
-func (b scrollBoxPtr) HandleMouseEnter(fn func()) {}
-func (b scrollBoxPtr) HandleMouseLeave(fn func()) {}
 func (b scrollBoxPtr) HandleKeyDown(fn func(int)) {}
 func (b scrollBoxPtr) HandleKeyUp(fn func(int)) {}
 

@@ -52,37 +52,50 @@
 
 - (void) mouseDown: (NSEvent *)event
 	{
-		NSLog(@"MOUSE DOWN %@", event);
+		NSPoint pt = [self convertPoint: [event locationInWindow] fromView: NULL];
+		NSRect frame = [self frame];
+		pt.y = frame.size.height - pt.y;
+		if (box->handle_mouse_down)
+			box->handle_mouse_down(box->handle_mouse_down_ctx, pt.x, pt.y, 1);
 	}
 
 - (void) mouseUp: (NSEvent *)event
 	{
-		NSLog(@"MOUSE UP %@", event);
+		NSPoint pt = [self convertPoint: [event locationInWindow] fromView: NULL];
+		NSRect frame = [self frame];
+		pt.y = frame.size.height - pt.y;
+		if (box->handle_mouse_up)
+			box->handle_mouse_up(box->handle_mouse_up_ctx, pt.x, pt.y, 1);
 	}
 
 - (void) mouseMoved: (NSEvent *)event
 	{
 		NSPoint pt = [self convertPoint: [event locationInWindow] fromView: NULL];
-
-		// FIXME invert y
+		NSRect frame = [self frame];
+		pt.y = frame.size.height - pt.y;
 		if (box->handle_mouse_move)
 			box->handle_mouse_move(box->handle_mouse_move_ctx, pt.x, pt.y);
-		NSLog(@"MOUSE MOVED %f, %f", pt.x, pt.y);
 	}
 
 - (void) mouseDragged: (NSEvent *)event
 	{
-		NSLog(@"MOUSE DRAGGED %@", event);
+		NSPoint pt = [self convertPoint: [event locationInWindow] fromView: NULL];
+		NSRect frame = [self frame];
+		pt.y = frame.size.height - pt.y;
+		if (box->handle_mouse_move)
+			box->handle_mouse_move(box->handle_mouse_move_ctx, pt.x, pt.y);
 	}
 
 - (void) mouseEntered: (NSEvent *)event
 	{
-		NSLog(@"MOUSE ENTERED %@", event);
+		if (box->handle_mouse_enter)
+			box->handle_mouse_enter(box->handle_mouse_enter_ctx);
 	}
 
 - (void) mouseExited: (NSEvent *)event
 	{
-		NSLog(@"MOUSE EXITED %@", event);
+		if (box->handle_mouse_leave)
+			box->handle_mouse_leave(box->handle_mouse_leave_ctx);
 	}
 
 @end
@@ -142,6 +155,36 @@
 	{
 		self->handle_redraw = fn;
 		self->handle_redraw_ctx = ctx;
+	}
+
+- (void) handleMouseMove: (void (*)(void *, int, int)) fn withContext: (void *) ctx
+	{
+		self->handle_mouse_move = fn;
+		self->handle_mouse_move_ctx = ctx;
+	}
+
+- (void) handleMouseDown: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx
+	{
+		self->handle_mouse_down = fn;
+		self->handle_mouse_down_ctx = ctx;
+	}
+
+- (void) handleMouseUp: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx
+	{
+		self->handle_mouse_up = fn;
+		self->handle_mouse_up_ctx = ctx;
+	}
+
+- (void) handleMouseEnter: (void (*)(void *)) fn withContext: (void *) ctx
+	{
+		self->handle_mouse_enter = fn;
+		self->handle_mouse_enter_ctx = ctx;
+	}
+
+- (void) handleMouseLeave: (void (*)(void *)) fn withContext: (void *) ctx
+	{
+		self->handle_mouse_leave = fn;
+		self->handle_mouse_leave_ctx = ctx;
 	}
 
 - (void) resizeChildren: (NSSize) size
@@ -214,27 +257,27 @@ void HandleResize(Box box, void (*fn)(void *), void *ctx)
 
 void HandleMouseMove(Box box, void (*fn)(void *, int, int), void *ctx)
 {
-	//FIXME implement
+	[(iBox *)box handleMouseMove: fn withContext: ctx];
 }
 
-void HandleMouseDown(Box box, void (*fn)(void *, int), void *ctx)
+void HandleMouseDown(Box box, void (*fn)(void *, int, int, int), void *ctx)
 {
-	//FIXME implement
+	[(iBox *)box handleMouseDown: fn withContext: ctx];
 }
 
-void HandleMouseUp(Box box, void (*fn)(void *, int), void *ctx)
+void HandleMouseUp(Box box, void (*fn)(void *, int, int, int), void *ctx)
 {
-	//FIXME implement
+	[(iBox *)box handleMouseUp: fn withContext: ctx];
 }
 
 void HandleMouseEnter(Box box, void (*fn)(void *), void *ctx)
 {
-	//FIXME implement
+	[(iBox *)box handleMouseEnter: fn withContext: ctx];
 }
 
 void HandleMouseLeave(Box box, void (*fn)(void *), void *ctx)
 {
-	//FIXME implement
+	[(iBox *)box handleMouseLeave: fn withContext: ctx];
 }
 
 void HandleKeyDown(Box box, void (*fn)(void *, int), void *ctx)

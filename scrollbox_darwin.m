@@ -52,6 +52,31 @@
 		[self->contentBox handleRedraw: fn withContext: ctx];
 	}
 
+- (void) handleMouseMove: (void (*)(void *, int, int)) fn withContext: (void *) ctx
+	{
+		[self->contentBox handleMouseMove: fn withContext: ctx];
+	}
+
+- (void) handleMouseDown: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx
+	{
+		[self->contentBox handleMouseDown: fn withContext: ctx];
+	}
+
+- (void) handleMouseUp: (void (*)(void *, int, int, int)) fn withContext: (void *) ctx
+	{
+		[self->contentBox handleMouseUp: fn withContext: ctx];
+	}
+
+- (void) handleMouseEnter: (void (*)(void *)) fn withContext: (void *) ctx
+	{
+		[self->contentBox handleMouseEnter: fn withContext: ctx];
+	}
+
+- (void) handleMouseLeave: (void (*)(void *)) fn withContext: (void *) ctx
+	{
+		[self->contentBox handleMouseLeave: fn withContext: ctx];
+	}
+
 - (void) setContentWidth: (int)width height: (int)height
 	{
 		NSSize size;
