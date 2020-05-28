@@ -20,6 +20,7 @@ var boxMouseUpMap = map[C.Box] func(int, int, int) {}
 var boxMouseEnterMap = map[C.Box] func() {}
 var boxMouseLeaveMap = map[C.Box] func() {}
 var itemSelectMap = map[C.MenuItem] func() {}
+var textChangeMap = map[C.TextInput] func(string) {}
 
 //export gorouteAppOpenFile
 func gorouteAppOpenFile(txt *C.char) C.char {
@@ -95,6 +96,15 @@ func gorouteItemSelect(m C.MenuItem) {
 	fn := itemSelectMap[m]
 	if fn != nil {
 		fn()
+	}
+}
+
+//export gorouteTextChange
+func gorouteTextChange(t C.TextInput,  txt *C.char) {
+	str := C.GoString(txt)
+	fn := textChangeMap[t]
+	if fn != nil {
+		fn(str)
 	}
 }
 

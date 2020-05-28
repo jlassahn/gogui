@@ -98,6 +98,16 @@
 			box->handle_mouse_leave(box->handle_mouse_leave_ctx);
 	}
 
+- (BOOL) acceptsFirstResponder
+	{
+		return YES;
+	}
+
+- (void) keyDown: (NSEvent *)event
+	{
+		NSLog(@"GOT KEY DOWN %X %X [%@]", [event keyCode], [[event characters] characterAtIndex: 0], [event characters]);
+	}
+
 @end
 
 @implementation iBox
@@ -280,12 +290,13 @@ void HandleMouseLeave(Box box, void (*fn)(void *), void *ctx)
 	[(iBox *)box handleMouseLeave: fn withContext: ctx];
 }
 
-void HandleKeyDown(Box box, void (*fn)(void *, int), void *ctx)
+void HandleKeyDown(Box box, void (*fn)(void *, int, int), void *ctx)
 {
+	// unicode char, modifier flags
 	//FIXME implement
 }
 
-void HandleKeyUp(Box box, void (*fn)(void *, int), void *ctx)
+void HandleKeyUp(Box box, void (*fn)(void *, int, int), void *ctx)
 {
 	//FIXME implement
 }

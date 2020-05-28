@@ -2,7 +2,6 @@
 #import "include/m_gui.h"
 #import "util_darwin.h"
 
-
 @implementation iWindow
 
 - (id) initWithStyle: (int) mode
@@ -101,7 +100,12 @@
 		NSRect rc = ComputePosition(screen, leftIn, topIn, rightIn, bottomIn);
 
 		[self->window setFrame:rc display:true];
-		[self resizeChildren: rc.size];
+
+		NSRect content = [NSWindow
+			contentRectForFrameRect: rc
+			styleMask: windowStyle];
+
+		[self resizeChildren: content.size];
 	}
 
 - (void) handleClose: (void (*)(void *)) fn withContext: (void *)ctx

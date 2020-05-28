@@ -31,6 +31,10 @@ func drawHandler(gfx gogui.Graphics) {
 
 }
 
+func textHandler(txt string) {
+	fmt.Println("got text: "+txt)
+}
+
 func main() {
 
 	gogui.Init()
@@ -96,6 +100,16 @@ func main() {
 
 	window.AddChild(box1)
 	*/
+
+	txt := gogui.CreateTextLineInput()
+	txtHeight := txt.GetBestHeight()
+	txt.SetPosition(
+		gogui.Pos(0,0),
+		gogui.Pos(0,btnHeight),
+		gogui.Pos(0,100),
+		gogui.Pos(0,btnHeight + txtHeight))
+	txt.HandleChange(textHandler)
+	window.AddChild(txt)
 
 	window.Show()
 

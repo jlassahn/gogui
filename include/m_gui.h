@@ -165,6 +165,20 @@
 
 @end
 
+@interface iTextInput : iElement
+{
+	NSTextField *textField;
+
+	void (*handle_change)(void *ctx, const char *txt);
+	void *handle_change_ctx;
+}
+
+- (void) handleChange: (void (*)(void *m, const char *)) fn withContext: (void *) ctx;
+- (int) bestHeight;
+- (NSString *) getValue;
+- (void) setValue: (NSString *)val;
+
+@end
 
 Graphics gfxStartRender(int width, int height);
 void gfxEndRender(Graphics gfx);

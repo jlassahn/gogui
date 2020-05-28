@@ -4,6 +4,9 @@ package gogui
 // #include "glue.h"
 //
 import "C"
+import (
+	"runtime"
+)
 
 const (
 	// Join Styles
@@ -61,18 +64,21 @@ func ccol(x Color) C.COLOR {
 	}
 }
 
-// FIXME do we need to call LockOSThread here?
 func Init() {
-	C.Init();
-	C.SetGlobalCallbacks();
+
+	// Cocoa must run on the applocation's main thread
+	runtime.LockOSThread()
+
+	C.Init()
+	C.SetGlobalCallbacks()
 }
 
 func Exit() {
-	C.Exit();
+	C.Exit()
 }
 
 func StopEventLoop(ret int) {
-	C.StopEventLoop(C.int(ret));
+	C.StopEventLoop(C.int(ret))
 }
 
 func RunEventLoop() int {

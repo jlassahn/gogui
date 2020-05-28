@@ -15,6 +15,7 @@ extern void gorouteBoxMouseUp(Box b, int x, int y, int btn);
 extern void gorouteBoxMouseEnter(Box b);
 extern void gorouteBoxMouseLeave(Box b);
 extern void gorouteItemSelect(MenuItem m);
+extern void gorouteTextChange(TextInput t, const char *txt);
 
 
 // static C redirect functions that can be called through pointers
@@ -28,8 +29,8 @@ static void crouteWindowClose(void *ctx) { gorouteWindowClose((Window)ctx); }
 static void crouteButtonClick(void *ctx) { gorouteButtonClick((Button)ctx); }
 
 static void crouteBoxResize(void *ctx) {}
-static void crouteBoxKeyDown(void *ctx, int kc) {}
-static void crouteBoxKeyUp(void *ctx, int kc) {}
+static void crouteBoxKeyDown(void *ctx, int ch, int flags) {}
+static void crouteBoxKeyUp(void *ctx, int ch, int flags) {}
 
 static void crouteBoxRedraw(void *ctx, Graphics gfx) {
 	gorouteBoxRedraw((Box)ctx, gfx);
@@ -57,6 +58,10 @@ static void crouteBoxMouseLeave(void *ctx) {
 
 static void crouteItemSelect(void *ctx) {
 	gorouteItemSelect((MenuItem)ctx);
+}
+
+static void crouteTextChange(void *ctx, const char *txt) {
+	gorouteTextChange((TextInput)ctx, txt);
 }
 
 // setup functions called from Go
@@ -106,5 +111,10 @@ void SetScrollBoxCallbacks(ScrollBox b)
 void SetMenuCallbacks(MenuItem m)
 {
 	HandleMenuSelect(m, crouteItemSelect, m);
+}
+
+void SetTextCallbacks(TextInput t)
+{
+	HandleChange(t, crouteTextChange, t);
 }
 

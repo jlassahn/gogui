@@ -51,6 +51,7 @@ typedef struct iGraphics *Graphics;
 typedef struct iFont *Font;
 
 typedef struct iFileDialog *FileDialog;
+typedef struct iTextInput *TextInput;
 
 
 Element BoxToElement(Box b);
@@ -64,6 +65,8 @@ Box WindowToBox(Window w);
 Element ButtonToElement(Button b);
 
 Menu MenuItemToMenu(MenuItem m);
+
+Element TextInputToElement(TextInput t);
 
 
 void SetPosition(Element element,
@@ -81,15 +84,15 @@ void AddChild(Box box, Element child);
 void RemoveChild(Box box, int n);
 int GetChildCount(Box box);
 Element GetChild(Box box, int n);
-void HandleResize(Box box, void (*fn)(void *), void *ctx);
-void HandleMouseMove(Box box, void (*fn)(void *, int, int), void *ctx);
-void HandleMouseDown(Box box, void (*fn)(void *, int, int, int), void *ctx);
-void HandleMouseUp(Box box, void (*fn)(void *, int, int, int), void *ctx);
-void HandleMouseEnter(Box box, void (*fn)(void *), void *ctx);
-void HandleMouseLeave(Box box, void (*fn)(void *), void *ctx);
-void HandleKeyDown(Box box, void (*fn)(void *, int), void *ctx);
-void HandleKeyUp(Box box, void (*fn)(void *, int), void *ctx);
-void HandleRedraw(Box box, void (*fn)(void *, Graphics), void *ctx);
+void HandleResize(Box box, void (*fn)(void *ctx), void *ctx);
+void HandleMouseMove(Box box, void (*fn)(void *ctx, int x, int y), void *ctx);
+void HandleMouseDown(Box box, void (*fn)(void *ctx, int x, int y, int btn), void *ctx);
+void HandleMouseUp(Box box, void (*fn)(void *ctx, int x, int y, int bn), void *ctx);
+void HandleMouseEnter(Box box, void (*fn)(void *ctx), void *ctx);
+void HandleMouseLeave(Box box, void (*fn)(void *ctx), void *ctx);
+void HandleKeyDown(Box box, void (*fn)(void *ctx, int ch, int flags), void *ctx);
+void HandleKeyUp(Box box, void (*fn)(void *ctx, int ch, int flags), void *ctx);
+void HandleRedraw(Box box, void (*fn)(void *ctx, Graphics gfx), void *ctx);
 void ForceRedraw(Box box);
 
 Window CreateWindow(int mode);
@@ -173,6 +176,12 @@ void DestroyFileDialog(FileDialog dlg);
 bool RunDialog(FileDialog dlg); //FIXME subclass
 void SetFileDialogFile(FileDialog dlg, const char *filename);
 const char *GetFileDialogFile(FileDialog dlg);
+
+TextInput CreateTextLineInput(void);
+void SetTextData(TextInput t, const char *txt);
+void HandleChange(TextInput t, void (*fn)(void *, const char *), void *ctx);
+int GetBestTextHeight(TextInput t);
+const char *GetTextData(TextInput t);
 
 void Init(void);
 void Exit(void);
