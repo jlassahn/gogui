@@ -172,6 +172,7 @@ Font CreateFont(const char *family, int style);
 void DestroyFont(Font font);
 
 FileDialog CreateOpenFileDialog(void);
+FileDialog CreateSaveFileDialog(void);
 void DestroyFileDialog(FileDialog dlg);
 bool RunDialog(FileDialog dlg); //FIXME subclass
 void SetFileDialogFile(FileDialog dlg, const char *filename);

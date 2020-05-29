@@ -159,6 +159,7 @@
 }
 
 - (id) initAsOpen;
+- (id) initAsSave;
 - (BOOL) run;
 - (void) setFile: (NSString *)filename;
 - (NSString *) file;

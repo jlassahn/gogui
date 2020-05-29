@@ -20,6 +20,16 @@
 	return self;
 }
 
+- (id) initAsSave
+{
+	self = [super init];
+	if (!self)
+		return self;
+
+	nspanel = [[NSSavePanel alloc] init];
+	return self;
+}
+
 - (BOOL) run
 {
 	return [nspanel runModal] == NSModalResponseOK;
@@ -40,6 +50,11 @@
 FileDialog CreateOpenFileDialog(void)
 {
 	return (FileDialog)[[iFileDialog alloc] initAsOpen];
+}
+
+FileDialog CreateSaveFileDialog(void)
+{
+	return (FileDialog)[[iFileDialog alloc] initAsSave];
 }
 
 bool RunDialog(FileDialog dlg)

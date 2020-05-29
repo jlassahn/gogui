@@ -1,6 +1,8 @@
 
 #import "include/m_gui.h"
 
+// FIXME control doesn't fit in it's bounding box right
+
 @implementation iTextInput
 - (id) init
 	{

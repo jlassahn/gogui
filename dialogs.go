@@ -22,6 +22,11 @@ func CreateOpenFileDialog() FileDialog {
 	return fileDialogPtr{C.CreateOpenFileDialog()}
 }
 
+func CreateSaveFileDialog() FileDialog {
+
+	return fileDialogPtr{C.CreateSaveFileDialog()}
+}
+
 func (dlg fileDialogPtr) Destroy() {
 	C.DestroyFileDialog(dlg.ptr)
 }
